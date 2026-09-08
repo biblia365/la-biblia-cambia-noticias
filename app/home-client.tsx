@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { NoticiaCard, VideoItem, CancionItem } from "@/lib/home-data";
+import SiteFooter from "@/components/site-footer";
 import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
 
 const navLinks = [
@@ -511,63 +512,7 @@ export default function HomeClient({
 
       </div>
 
-      <footer className="bg-[#04223f] text-slate-300">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid md:grid-cols-4 gap-10">
-
-            <div>
-              <Image
-                src="/logo.png"
-                alt="La Biblia Cambia Noticias"
-                width={100}
-                height={100}
-                className="w-16 h-16 object-contain"
-              />
-              <h2 className="text-white text-xl font-extrabold mt-4">
-                LA BIBLIA CAMBIA NOTICIAS
-              </h2>
-              <p className="text-sm mt-3 max-w-xs leading-relaxed">
-                Un medio de comunicacion dedicado a informar con responsabilidad sobre la actualidad cristiana, la comunidad y las historias de esperanza.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-white font-bold text-sm mb-4">SECCIONES</h3>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#nacionales" className="hover:text-[#C9972B] transition">Nacionales</a></li>
-                <li><a href="#internacionales" className="hover:text-[#C9972B] transition">Internacionales</a></li>
-                <li><a href="#fe" className="hover:text-[#C9972B] transition">Fe y Comunidad</a></li>
-                <li><a href="#videos" className="hover:text-[#C9972B] transition">Videos</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-white font-bold text-sm mb-4">INFORMACION</h3>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-[#C9972B] transition">Quienes somos</a></li>
-                <li><a href="#" className="hover:text-[#C9972B] transition">Contacto</a></li>
-                <li><a href="#" className="hover:text-[#C9972B] transition">Politica de privacidad</a></li>
-                <li><a href="#" className="hover:text-[#C9972B] transition">Terminos de uso</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-white font-bold text-sm mb-4">SIGUENOS</h3>
-              <ul className="space-y-2 text-sm">
-                <li><a href={redes.facebook} target="_blank" rel="noreferrer" className="hover:text-[#C9972B] transition">Facebook</a></li>
-                <li><a href={redes.youtube} target="_blank" rel="noreferrer" className="hover:text-[#C9972B] transition">YouTube</a></li>
-                <li><a href={redes.instagram} target="_blank" rel="noreferrer" className="hover:text-[#C9972B] transition">Instagram</a></li>
-                <li><a href={redes.tiktok} target="_blank" rel="noreferrer" className="hover:text-[#C9972B] transition">TikTok</a></li>
-              </ul>
-            </div>
-
-          </div>
-
-          <div className="border-t border-white/10 mt-10 pt-6 text-center text-xs text-slate-500">
-            (c) 2026 La Biblia Cambia Noticias. Todos los derechos reservados.
-          </div>
-        </div>
-      </footer>
+      <SiteFooter redes={redes} />
 
     </main>
   );

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import SiteFooter from "@/components/site-footer";
 
 function formatFechaHora(iso: string) {
   const d = new Date(iso);
@@ -21,6 +22,20 @@ export default async function NoticiaPage({
 }) {
   const { slug } = await params;
   const supabase = await createClient();
+
+  const { data: redesRaw } = await supabase
+    .from("redes_sociales")
+    .select("plataforma, url")
+    .eq("activo", true);
+
+  const redesMap = new Map<string, string>();
+  (redesRaw ?? []).forEach((r: any) => redesMap.set(r.plataforma.toLowerCase(), r.url));
+  const redes = {
+    facebook: redesMap.get("facebook") || "#",
+    youtube: redesMap.get("youtube") || "#",
+    instagram: redesMap.get("instagram") || "#",
+    tiktok: redesMap.get("tiktok") || "#",
+  };
 
   const { data: noticia } = await supabase
     .from("noticias")
@@ -111,11 +126,7 @@ export default async function NoticiaPage({
         </div>
       </article>
 
-      <footer className="bg-[#04223f] text-slate-300 mt-10">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500">
-          (c) 2026 La Biblia Cambia Noticias. Todos los derechos reservados.
-        </div>
-      </footer>
+      <SiteFooter redes={redes} />
     </main>
   );
 }
