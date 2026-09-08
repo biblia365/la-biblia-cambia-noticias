@@ -154,3 +154,52 @@ export async function borrarCategoria(id: string) {
   revalidatePath('/admin/categorias')
   return { success: true }
 }
+
+export async function crearVideo(formData: FormData) {
+  const supabase = await createClient()
+  const titulo = formData.get('titulo') as string
+  const url = formData.get('url') as string
+  const { error } = await supabase.from('videos').insert({
+    titulo,
+    url,
+    activo: true,
+    orden: 0,
+  })
+  if (error) {
+    return { error: 'Error al crear el video: ' + error.message }
+  }
+  revalidatePath('/admin/videos')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function borrarVideo(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('videos').delete().eq('id', id)
+  if (error) {
+    return { error: 'Error al borrar el video: ' + error.message }
+  }
+  revalidatePath('/admin/videos')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function guardarVersiculo(formData: FormData) {
+  const supabase = await createClient()
+  const texto = formData.get('texto') as string
+  const referencia = formData.get('referencia') as string
+
+  await supabase.from('versiculo_dia').update({ activo: false }).eq('activo', true)
+
+  const { error } = await supabase.from('versiculo_dia').insert({
+    texto,
+    referencia,
+    activo: true,
+  })
+  if (error) {
+    return { error: 'Error al guardar el versiculo: ' + error.message }
+  }
+  revalidatePath('/admin/versiculo')
+  revalidatePath('/')
+  return { success: true }
+}
