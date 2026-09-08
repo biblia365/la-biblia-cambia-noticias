@@ -7,7 +7,6 @@ export default async function VideosPage() {
   const { data: videos } = await supabase
     .from('videos')
     .select('*')
-    .order('orden', { ascending: true })
     .order('created_at', { ascending: false })
 
   return (

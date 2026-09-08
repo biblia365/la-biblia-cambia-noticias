@@ -81,13 +81,11 @@ export async function getHomeData() {
         .from('versiculo_dia')
         .select('texto, referencia')
         .eq('activo', true)
-        .order('created_at', { ascending: false })
+        .order('updated_at', { ascending: false })
         .limit(1),
       supabase
         .from('videos')
         .select('id, titulo, url')
-        .eq('activo', true)
-        .order('orden', { ascending: true })
         .order('created_at', { ascending: false })
         .limit(4),
       supabase.from('redes_sociales').select('plataforma, url').eq('activo', true),

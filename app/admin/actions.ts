@@ -162,8 +162,6 @@ export async function crearVideo(formData: FormData) {
   const { error } = await supabase.from('videos').insert({
     titulo,
     url,
-    activo: true,
-    orden: 0,
   })
   if (error) {
     return { error: 'Error al crear el video: ' + error.message }
