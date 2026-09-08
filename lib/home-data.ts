@@ -17,6 +17,14 @@ export type VideoItem = {
   url: string
 }
 
+export type CancionItem = {
+  id: string
+  titulo: string
+  artista: string | null
+  url: string
+  portada: string | null
+}
+
 const IMG_FALLBACK =
   'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1200&q=80'
 
@@ -69,7 +77,7 @@ function tomarPorCategoria(
 export async function getHomeData() {
   const supabase = await createClient()
 
-  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }] =
+  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }] =
     await Promise.all([
       supabase
         .from('noticias')
@@ -89,6 +97,11 @@ export async function getHomeData() {
         .order('created_at', { ascending: false })
         .limit(4),
       supabase.from('redes_sociales').select('plataforma, url').eq('activo', true),
+      supabase
+        .from('canciones')
+        .select('id, titulo, artista, url, portada')
+        .order('created_at', { ascending: false })
+        .limit(20),
     ])
 
   const pool = (noticiasRaw ?? []).map(mapNoticia)
@@ -119,6 +132,14 @@ export async function getHomeData() {
     url: v.url,
   }))
 
+  const canciones: CancionItem[] = (cancionesRaw ?? []).map((c: any) => ({
+    id: c.id,
+    titulo: c.titulo,
+    artista: c.artista,
+    url: c.url,
+    portada: c.portada,
+  }))
+
   const redesMap = new Map<string, string>()
   ;(redesRaw ?? []).forEach((r: any) => redesMap.set(r.plataforma.toLowerCase(), r.url))
 
@@ -131,6 +152,7 @@ export async function getHomeData() {
     ultimasNoticias: ultimasNoticias.length ? ultimasNoticias : ['Aun no hay noticias publicadas.'],
     versiculo,
     videos,
+    canciones,
     redes: {
       facebook: redesMap.get('facebook') || '#',
       youtube: redesMap.get('youtube') || '#',

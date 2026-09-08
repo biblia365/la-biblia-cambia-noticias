@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { NoticiaCard, VideoItem } from "@/lib/home-data";
+import type { NoticiaCard, VideoItem, CancionItem } from "@/lib/home-data";
 import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
 
 const navLinks = [
@@ -24,6 +24,7 @@ type Props = {
   ultimasNoticias: string[];
   versiculo: { texto: string; referencia: string };
   videos: VideoItem[];
+  canciones: CancionItem[];
   redes: { facebook: string; youtube: string; instagram: string; tiktok: string };
 };
 
@@ -36,6 +37,7 @@ export default function HomeClient({
   ultimasNoticias,
   versiculo,
   videos,
+  canciones,
   redes,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,6 +45,7 @@ export default function HomeClient({
   const [fecha, setFecha] = useState("");
   const [videoActivoId, setVideoActivoId] = useState<string | undefined>(undefined);
   const [reproduciendo, setReproduciendo] = useState(false);
+  const [cancionActivaId, setCancionActivaId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const hoy = new Date();
@@ -427,6 +430,60 @@ export default function HomeClient({
               )}
             </div>
           </div>
+        </section>
+
+        <section id="musica" className="py-8">
+          <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
+            <h2 className="text-2xl font-extrabold text-[#063B73]">
+              Musica
+            </h2>
+          </div>
+          {canciones.length ? (
+            <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+              {canciones.map((c) => {
+                const activa = cancionActivaId === c.id;
+                return (
+                  <div key={c.id} className="flex items-center gap-4 p-4">
+                    <button
+                      type="button"
+                      onClick={() => setCancionActivaId(activa ? undefined : c.id)}
+                      className="w-12 h-12 rounded-full bg-[#063B73] flex items-center justify-center flex-shrink-0 overflow-hidden relative"
+                      aria-label={activa ? "Pausar" : "Reproducir"}
+                    >
+                      {c.portada ? (
+                        <img src={c.portada} alt={c.titulo} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                      ) : null}
+                      <svg width="16" viewBox="0 0 30 30" className="relative z-10">
+                        {activa ? (
+                          <g fill="white">
+                            <rect x="8" y="6" width="5" height="18" />
+                            <rect x="17" y="6" width="5" height="18" />
+                          </g>
+                        ) : (
+                          <path d="M7 4L25 15L7 26Z" fill="white" />
+                        )}
+                      </svg>
+                    </button>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-[#063B73] text-sm">{c.titulo}</h3>
+                      {c.artista && <p className="text-xs text-slate-400">{c.artista}</p>}
+                    </div>
+                    {activa && (
+                      <audio
+                        src={c.url}
+                        autoPlay
+                        controls
+                        onEnded={() => setCancionActivaId(undefined)}
+                        className="max-w-[220px]"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-slate-400">Aun no hay canciones publicadas.</p>
+          )}
         </section>
 
         <section className="py-8">

@@ -201,3 +201,61 @@ export async function guardarVersiculo(formData: FormData) {
   revalidatePath('/')
   return { success: true }
 }
+
+export async function crearCancion(formData: FormData) {
+  const supabase = await createClient()
+  const titulo = formData.get('titulo') as string
+  const artista = formData.get('artista') as string
+  const audioFile = formData.get('audio') as File
+  const portadaFile = formData.get('portada') as File
+
+  if (!audioFile || audioFile.size === 0) {
+    return { error: 'Debes seleccionar un archivo de audio' }
+  }
+
+  const nombreAudio = `audio/${Date.now()}-${audioFile.name}`
+  const { error: audioError } = await supabase.storage
+    .from('canciones')
+    .upload(nombreAudio, audioFile)
+  if (audioError) {
+    return { error: 'Error al subir el audio: ' + audioError.message }
+  }
+  const { data: audioUrlData } = supabase.storage.from('canciones').getPublicUrl(nombreAudio)
+
+  let portadaUrl = ''
+  if (portadaFile && portadaFile.size > 0) {
+    const nombrePortada = `portadas/${Date.now()}-${portadaFile.name}`
+    const { error: portadaError } = await supabase.storage
+      .from('canciones')
+      .upload(nombrePortada, portadaFile)
+    if (portadaError) {
+      return { error: 'Error al subir la portada: ' + portadaError.message }
+    }
+    const { data: portadaUrlData } = supabase.storage.from('canciones').getPublicUrl(nombrePortada)
+    portadaUrl = portadaUrlData.publicUrl
+  }
+
+  const { error } = await supabase.from('canciones').insert({
+    titulo,
+    artista: artista || null,
+    url: audioUrlData.publicUrl,
+    portada: portadaUrl || null,
+  })
+  if (error) {
+    return { error: 'Error al crear la cancion: ' + error.message }
+  }
+  revalidatePath('/admin/musica')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function borrarCancion(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('canciones').delete().eq('id', id)
+  if (error) {
+    return { error: 'Error al borrar la cancion: ' + error.message }
+  }
+  revalidatePath('/admin/musica')
+  revalidatePath('/')
+  return { success: true }
+}
