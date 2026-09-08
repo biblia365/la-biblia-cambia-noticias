@@ -1,12 +1,13 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import LogoutButton from './logout-button'
 
 const NAV = [
   { href: '/admin/noticias', label: 'Noticias' },
-  { href: '/admin/categorias', label: 'Categorías' },
-  { href: '/admin/versiculo', label: 'Versículo del día' },
+  { href: '/admin/categorias', label: 'CategorÃ­as' },
+  { href: '/admin/versiculo', label: 'VersÃ­culo del dÃ­a' },
   { href: '/admin/videos', label: 'Videos' },
+  { href: '/admin/musica', label: 'Musica' },
   { href: '/admin/redes', label: 'Redes Sociales' },
 ]
 
@@ -37,7 +38,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             La Biblia Cambia
           </div>
           <div style={{ fontSize: 12, color: '#8B8FA3', marginTop: 2, letterSpacing: '.02em' }}>
-            Panel de administración
+            Panel de administraciÃ³n
           </div>
         </div>
 
@@ -66,7 +67,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             rel="noreferrer"
             style={{ fontSize: 12.5, color: '#8B8FA3', textDecoration: 'none' }}
           >
-            Ver sitio público →
+            Ver sitio pÃºblico â†’
           </a>
         </div>
       </aside>
