@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+﻿import { createClient } from '@/lib/supabase/server'
 import CategoriaForm from './categoria-form'
 import BorrarCategoriaBoton from './borrar-categoria-boton'
 

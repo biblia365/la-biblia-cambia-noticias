@@ -12,6 +12,11 @@ function slugify(text: string) {
     .replace(/(^-|-$)/g, '')
 }
 
+function slugUnico(titulo: string) {
+  const sufijo = Math.random().toString(36).slice(2, 8)
+  return `${slugify(titulo)}-${sufijo}`
+}
+
 export async function crearNoticia(formData: FormData) {
   const supabase = await createClient()
 
@@ -44,7 +49,7 @@ export async function crearNoticia(formData: FormData) {
 
   const { error } = await supabase.from('noticias').insert({
     titulo,
-    slug: slugify(titulo),
+    slug: slugUnico(titulo),
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
@@ -74,7 +79,7 @@ export async function actualizarNoticia(id: string, formData: FormData) {
 
   const datosActualizar: Record<string, unknown> = {
     titulo,
-    slug: slugify(titulo),
+    slug: slugUnico(titulo),
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
