@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { NoticiaCard, VideoItem } from "@/lib/home-data";
+import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
 
 const navLinks = [
   { href: "#inicio", label: "INICIO" },
@@ -40,6 +41,8 @@ export default function HomeClient({
   const [menuOpen, setMenuOpen] = useState(false);
   const [breakingIndex, setBreakingIndex] = useState(0);
   const [fecha, setFecha] = useState("");
+  const [videoActivoId, setVideoActivoId] = useState<string | undefined>(undefined);
+  const [reproduciendo, setReproduciendo] = useState(false);
 
   useEffect(() => {
     const hoy = new Date();
@@ -341,56 +344,87 @@ export default function HomeClient({
             <h2 className="text-2xl font-extrabold text-[#063B73]">
               Videos y Entrevistas
             </h2>
-            <a href="#" className="text-sm font-bold text-[#C9972B] hover:text-[#b78620]">
-              VER TODOS
-            </a>
           </div>
           <div className="grid md:grid-cols-[2fr_1fr] gap-5">
-            <a
-              href={videoDestacado?.url || '#'}
-              target="_blank"
-              rel="noreferrer"
-              className="relative bg-[#04223f] rounded-xl min-h-[280px] md:min-h-[320px] flex items-center justify-center overflow-hidden"
-            >
-              <span
-                className="w-16 h-16 rounded-full border-2 border-white/80 flex items-center justify-center hover:scale-110 hover:bg-white/10 transition"
-                aria-label="Reproducir video"
-              >
-                <svg width="24" viewBox="0 0 30 30">
-                  <path d="M7 4L25 15L7 26Z" fill="white" />
-                </svg>
-              </span>
-              <span className="absolute bottom-5 left-5 right-5 text-white font-bold text-lg">
-                {videoDestacado?.titulo || 'Entrevista especial: historias que transforman vidas'}
-              </span>
-            </a>
+            {(() => {
+              const principal =
+                videos.find((v) => v.id === videoActivoId) || videoDestacado;
+              const miniaturaPrincipal = principal ? getYoutubeThumbnail(principal.url) : null;
+              const embedPrincipal = principal ? getYoutubeEmbedUrl(principal.url) : null;
+
+              return (
+                <div className="relative bg-[#04223f] rounded-xl min-h-[280px] md:min-h-[320px] overflow-hidden">
+                  {reproduciendo && embedPrincipal ? (
+                    <iframe
+                      key={embedPrincipal}
+                      src={embedPrincipal}
+                      title={principal?.titulo || "Video"}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setReproduciendo(true)}
+                      className="absolute inset-0 w-full h-full flex items-center justify-center"
+                      aria-label="Reproducir video"
+                    >
+                      {miniaturaPrincipal ? (
+                        <img
+                          src={miniaturaPrincipal}
+                          alt={principal?.titulo || "Video"}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      ) : null}
+                      <div className="absolute inset-0 bg-black/40" />
+                      <span className="relative w-16 h-16 rounded-full border-2 border-white/80 flex items-center justify-center hover:scale-110 hover:bg-white/10 transition">
+                        <svg width="24" viewBox="0 0 30 30">
+                          <path d="M7 4L25 15L7 26Z" fill="white" />
+                        </svg>
+                      </span>
+                      <span className="absolute bottom-5 left-5 right-5 text-white font-bold text-lg text-left">
+                        {principal?.titulo || "Entrevista especial: historias que transforman vidas"}
+                      </span>
+                    </button>
+                  )}
+                </div>
+              );
+            })()}
 
             <div className="flex flex-col gap-3">
-              {(videosLista.length
-                ? videosLista
-                : [
-                    { id: 'a', titulo: 'Testimonio de fe y superacion', url: '#' },
-                    { id: 'b', titulo: 'Conversacion sobre el futuro de la iglesia', url: '#' },
-                    { id: 'c', titulo: 'Noticias de la comunidad cristiana', url: '#' },
-                  ]
-              ).map((v) => (
-                <a
-                  key={v.id}
-                  href={v.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-white border border-slate-200 rounded-lg p-3 flex items-center gap-3"
-                >
-                  <div className="w-20 h-16 bg-[#536d7e] flex items-center justify-center rounded flex-shrink-0">
-                    <svg width="20" viewBox="0 0 30 30">
-                      <path d="M7 4L25 15L7 26Z" fill="white" />
-                    </svg>
-                  </div>
-                  <h3 className="text-sm font-bold text-[#063B73] leading-snug">
-                    {v.titulo}
-                  </h3>
-                </a>
-              ))}
+              {videosLista.map((v) => {
+                const miniatura = getYoutubeThumbnail(v.url);
+                const activo = v.id === videoActivoId || (!videoActivoId && v.id === videoDestacado?.id);
+                return (
+                  <button
+                    type="button"
+                    key={v.id}
+                    onClick={() => {
+                      setVideoActivoId(v.id);
+                      setReproduciendo(true);
+                    }}
+                    className={`bg-white border rounded-lg p-3 flex items-center gap-3 text-left transition ${
+                      activo ? "border-[#C9972B]" : "border-slate-200"
+                    }`}
+                  >
+                    <div className="w-20 h-16 bg-[#536d7e] flex items-center justify-center rounded flex-shrink-0 overflow-hidden relative">
+                      {miniatura ? (
+                        <img src={miniatura} alt={v.titulo} className="absolute inset-0 w-full h-full object-cover" />
+                      ) : null}
+                      <svg width="20" viewBox="0 0 30 30" className="relative z-10">
+                        <path d="M7 4L25 15L7 26Z" fill="white" />
+                      </svg>
+                    </div>
+                    <h3 className="text-sm font-bold text-[#063B73] leading-snug">
+                      {v.titulo}
+                    </h3>
+                  </button>
+                );
+              })}
+              {!videosLista.length && (
+                <p className="text-sm text-slate-400">Aun no hay mas videos.</p>
+              )}
             </div>
           </div>
         </section>
