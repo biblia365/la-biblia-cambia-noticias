@@ -13,6 +13,7 @@ const navLinks = [
   { href: "#internacionales", label: "INTERNACIONALES" },
   { href: "#fe", label: "FE Y COMUNIDAD" },
   { href: "#videos", label: "VIDEOS" },
+  { href: "/biblia", label: "BIBLIA" },
   { href: "#reflexion", label: "REFLEXION" },
 ];
 
