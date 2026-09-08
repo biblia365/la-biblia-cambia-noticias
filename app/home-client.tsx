@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { NoticiaCard, VideoItem } from "@/lib/home-data";
 
@@ -61,7 +62,6 @@ export default function HomeClient({
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      {/* BARRA SUPERIOR */}
       <div className="bg-[#04223f] text-slate-200 text-xs md:text-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
           <span>{fecha}</span>
@@ -73,7 +73,6 @@ export default function HomeClient({
         </div>
       </div>
 
-      {/* HEADER */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
           <a href="#inicio" className="flex items-center gap-3">
@@ -139,7 +138,6 @@ export default function HomeClient({
         )}
       </header>
 
-      {/* ULTIMA HORA */}
       <div className="bg-[#c62828] text-white">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-4">
           <span className="text-xs font-extrabold tracking-wide border-r border-white/40 pr-4 whitespace-nowrap">
@@ -153,11 +151,13 @@ export default function HomeClient({
 
       <div className="max-w-7xl mx-auto px-4">
 
-        {/* HERO */}
         <section id="inicio" className="grid lg:grid-cols-3 gap-5 py-8">
 
           {principal && (
-            <article className="lg:col-span-2 relative rounded-xl overflow-hidden min-h-[300px] md:min-h-[420px] bg-[#063B73]">
+            <Link
+              href={`/noticias/${principal.slug}`}
+              className="lg:col-span-2 relative rounded-xl overflow-hidden min-h-[300px] md:min-h-[420px] bg-[#063B73] block"
+            >
               <img
                 src={principal.imagen}
                 alt={principal.titulo}
@@ -175,13 +175,14 @@ export default function HomeClient({
                   {principal.descripcion}
                 </p>
               </div>
-            </article>
+            </Link>
           )}
 
           <div className="grid grid-rows-2 gap-5">
             {heroSide.map((n) => (
-              <article
+              <Link
                 key={n.id}
+                href={`/noticias/${n.slug}`}
                 className="bg-white rounded-xl border border-slate-200 overflow-hidden grid grid-cols-[42%_58%] hover:-translate-y-1 hover:shadow-lg transition"
               >
                 <img
@@ -200,13 +201,12 @@ export default function HomeClient({
                     {n.fecha}
                   </span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
 
         </section>
 
-        {/* NACIONALES */}
         <section id="nacionales" className="py-8">
           <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
             <h2 className="text-2xl font-extrabold text-[#063B73]">
@@ -218,9 +218,10 @@ export default function HomeClient({
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {nacionales.map((n) => (
-              <article
+              <Link
                 key={n.id}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition"
+                href={`/noticias/${n.slug}`}
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
               >
                 <div className="h-48">
                   <img
@@ -243,12 +244,11 @@ export default function HomeClient({
                     {n.fechaHora}
                   </span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </section>
 
-        {/* INTERNACIONALES */}
         <section id="internacionales" className="py-8">
           <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
             <h2 className="text-2xl font-extrabold text-[#063B73]">
@@ -260,9 +260,10 @@ export default function HomeClient({
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {internacionales.map((n) => (
-              <article
+              <Link
                 key={n.id}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition"
+                href={`/noticias/${n.slug}`}
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
               >
                 <div className="h-48">
                   <img
@@ -285,12 +286,11 @@ export default function HomeClient({
                     {n.fecha}
                   </span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </section>
 
-        {/* DESTACADO / ANALISIS */}
         {analisis && (
           <section id="fe" className="py-8">
             <div className="grid md:grid-cols-[1.4fr_1fr] rounded-xl overflow-hidden bg-[#063B73]">
@@ -311,15 +311,17 @@ export default function HomeClient({
                 <p className="mt-4 text-slate-200 text-sm">
                   {analisis.descripcion}
                 </p>
-                <button className="mt-6 w-max bg-[#C9972B] hover:bg-[#b78620] text-[#04223f] font-extrabold text-xs px-5 py-3 rounded transition">
+                <Link
+                  href={`/noticias/${analisis.slug}`}
+                  className="mt-6 w-max bg-[#C9972B] hover:bg-[#b78620] text-[#04223f] font-extrabold text-xs px-5 py-3 rounded transition"
+                >
                   LEER ARTICULO
-                </button>
+                </Link>
               </div>
             </div>
           </section>
         )}
 
-        {/* VERSICULO */}
         <section id="reflexion" className="py-8">
           <div className="bg-white border border-slate-200 border-l-4 border-l-[#C9972B] p-8 md:p-10 text-center rounded">
             <h2 className="text-xs uppercase tracking-[0.2em] text-[#063B73] font-bold mb-4">
@@ -334,7 +336,6 @@ export default function HomeClient({
           </div>
         </section>
 
-        {/* VIDEOS */}
         <section id="videos" className="py-8">
           <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
             <h2 className="text-2xl font-extrabold text-[#063B73]">
@@ -394,7 +395,6 @@ export default function HomeClient({
           </div>
         </section>
 
-        {/* NEWSLETTER */}
         <section className="py-8">
           <div className="bg-slate-100 border border-slate-200 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
@@ -420,7 +420,6 @@ export default function HomeClient({
 
       </div>
 
-      {/* FOOTER */}
       <footer className="bg-[#04223f] text-slate-300">
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-10">

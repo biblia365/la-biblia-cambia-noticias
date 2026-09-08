@@ -1,7 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
+﻿import { createClient } from '@/lib/supabase/server'
 
 export type NoticiaCard = {
   id: string
+  slug: string
   categoria: string
   titulo: string
   descripcion: string | null
@@ -38,6 +39,7 @@ function formatFechaHora(iso: string) {
 function mapNoticia(n: any): NoticiaCard {
   return {
     id: n.id,
+    slug: n.slug,
     categoria: (n.categorias?.nombre || 'NOTICIAS').toUpperCase(),
     titulo: n.titulo,
     descripcion: n.descripcion,
@@ -47,9 +49,9 @@ function mapNoticia(n: any): NoticiaCard {
   }
 }
 
-// Toma `count` noticias del pool cuya categoría contenga `match`
+// Toma `count` noticias del pool cuya categoria contenga `match`
 // (case-insensitive). Si no alcanza, rellena con lo que quede del pool
-// para que la sección nunca se vea vacía. Marca los ids usados.
+// para que la seccion nunca se vea vacia. Marca los ids usados.
 function tomarPorCategoria(
   pool: NoticiaCard[],
   usados: Set<string>,
@@ -71,7 +73,7 @@ export async function getHomeData() {
     await Promise.all([
       supabase
         .from('noticias')
-        .select('id, titulo, descripcion, imagen, destacada, created_at, categorias(nombre)')
+        .select('id, slug, titulo, descripcion, imagen, destacada, created_at, categorias(nombre)')
         .eq('publicado', true)
         .order('created_at', { ascending: false })
         .limit(30),
@@ -94,7 +96,6 @@ export async function getHomeData() {
   const pool = (noticiasRaw ?? []).map(mapNoticia)
   const usados = new Set<string>()
 
-  // Principal: la marcada como destacada, si no la mas reciente
   const destacadaId = (noticiasRaw ?? []).find((n: any) => n.destacada)?.id
   const principal = pool.find((p) => p.id === destacadaId) ?? pool[0]
 
@@ -112,7 +113,7 @@ export async function getHomeData() {
 
   const versiculo = versiculoRaw?.[0]
     ? { texto: versiculoRaw[0].texto, referencia: versiculoRaw[0].referencia }
-    : { texto: 'El Señor es mi pastor; nada me faltará.', referencia: 'Salmos 23:1' }
+    : { texto: 'El Senor es mi pastor; nada me faltara.', referencia: 'Salmos 23:1' }
 
   const videos: VideoItem[] = (videosRaw ?? []).map((v: any) => ({
     id: v.id,
