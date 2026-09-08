@@ -12,6 +12,8 @@ export default function BibliaSelector({
 }) {
   const router = useRouter();
   const libroActual = LIBROS.find((l) => l.num === libroNum) ?? LIBROS[42];
+  const antiguoTestamento = LIBROS.filter((l) => l.num <= 39);
+  const nuevoTestamento = LIBROS.filter((l) => l.num >= 40);
 
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-4 md:p-6 mb-6 flex flex-col md:flex-row gap-4">
@@ -20,9 +22,16 @@ export default function BibliaSelector({
         onChange={(e) => router.push(`/biblia?libro=${e.target.value}&capitulo=1`)}
         className="flex-1 border border-slate-300 rounded-lg px-4 py-3 font-bold text-[#063B73] outline-none"
       >
-        {LIBROS.map((l) => (
-          <option key={l.num} value={l.num}>{l.nombre}</option>
-        ))}
+        <optgroup label="ANTIGUO TESTAMENTO">
+          {antiguoTestamento.map((l) => (
+            <option key={l.num} value={l.num}>{l.nombre}</option>
+          ))}
+        </optgroup>
+        <optgroup label="NUEVO TESTAMENTO">
+          {nuevoTestamento.map((l) => (
+            <option key={l.num} value={l.num}>{l.nombre}</option>
+          ))}
+        </optgroup>
       </select>
 
       <select
