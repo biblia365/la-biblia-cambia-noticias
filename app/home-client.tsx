@@ -86,8 +86,8 @@ export default function HomeClient({
       </div>
 
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
-          <a href="#inicio" className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <a href="#inicio" className="flex items-center gap-3 flex-shrink-0">
             <Image
               src="/logo.png"
               alt="La Biblia Cambia Noticias"
@@ -96,22 +96,22 @@ export default function HomeClient({
               className="w-12 h-12 md:w-14 md:h-14 object-contain"
               priority
             />
-            <div className="leading-tight">
-              <span className="block text-lg md:text-xl font-extrabold text-[#063B73] tracking-tight">
+            <div className="leading-tight whitespace-nowrap">
+              <span className="block text-base md:text-xl font-extrabold text-[#063B73] tracking-tight whitespace-nowrap">
                 LA BIBLIA CAMBIA
               </span>
-              <span className="block text-[10px] md:text-xs tracking-[0.2em] text-[#C9972B] font-bold mt-1">
+              <span className="block text-[9px] md:text-xs tracking-[0.15em] text-[#C9972B] font-bold mt-1 whitespace-nowrap">
                 ACTUALIDAD - FE - VERDAD
               </span>
             </div>
           </a>
 
-          <nav className="hidden md:flex items-center gap-1 font-bold text-sm">
+          <nav className="hidden md:flex items-center gap-0.5 font-extrabold text-[13px] flex-shrink-0">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 rounded text-slate-700 hover:text-[#C9972B] border-b-2 border-transparent hover:border-[#C9972B] transition"
+                className="px-2 py-2 whitespace-nowrap rounded text-slate-800 hover:text-[#C9972B] border-b-2 border-transparent hover:border-[#C9972B] transition"
               >
                 {link.label}
               </a>
@@ -125,7 +125,7 @@ export default function HomeClient({
                 router.push(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
               }
             }}
-            className="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-2 gap-2"
+            className="hidden md:flex items-center bg-white border border-slate-300 rounded-lg px-3 py-2 gap-2 flex-shrink-0"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />
@@ -135,13 +135,13 @@ export default function HomeClient({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar noticias..."
-              className="bg-transparent outline-none text-sm w-40"
+              placeholder="Buscar..."
+              className="bg-white outline-none text-sm w-24 lg:w-36"
             />
           </form>
 
           <button
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded border border-slate-200"
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded border border-slate-200 flex-shrink-0"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Abrir menu"
           >
@@ -166,7 +166,7 @@ export default function HomeClient({
                 router.push(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
               }
             }}
-            className="flex items-center bg-slate-100 rounded-lg px-3 py-2 gap-2 mb-2"
+            className="flex items-center bg-white border border-slate-300 rounded-lg px-3 py-2 gap-2 mb-2"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />
@@ -177,7 +177,7 @@ export default function HomeClient({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar noticias..."
-              className="bg-transparent outline-none text-sm flex-1"
+              className="bg-white outline-none text-sm flex-1"
             />
           </form>
           {navLinks.map((link) => (
@@ -185,7 +185,7 @@ export default function HomeClient({
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="px-2 py-3 font-bold text-sm text-slate-700 hover:text-[#C9972B] border-b border-slate-100 transition"
+                className="px-2 py-3 font-extrabold text-sm text-slate-800 hover:text-[#C9972B] border-b border-slate-100 transition"
               >
                 {link.label}
               </a>
