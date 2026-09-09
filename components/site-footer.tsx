@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 
 type Redes = {
   facebook?: string;
@@ -21,7 +21,7 @@ export default function SiteFooter({ redes }: { redes?: Redes }) {
         <div className="grid md:grid-cols-4 gap-10">
           <div>
             <Image
-              src="/logo.png"
+              src="/logo-icono.png"
               alt="La Biblia Cambia Noticias"
               width={100}
               height={100}
