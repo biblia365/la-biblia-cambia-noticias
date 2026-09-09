@@ -12,6 +12,14 @@ function slugify(text: string) {
     .replace(/(^-|-$)/g, '')
 }
 
+function extraerPathStorage(url: string | null | undefined, bucket: string): string | null {
+  if (!url) return null
+  const marker = `/storage/v1/object/public/${bucket}/`
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.substring(idx + marker.length)
+}
+
 function slugUnico(titulo: string) {
   const sufijo = Math.random().toString(36).slice(2, 8)
   return `${slugify(titulo)}-${sufijo}`
@@ -68,7 +76,6 @@ export async function crearNoticia(formData: FormData) {
 
 export async function actualizarNoticia(id: string, formData: FormData) {
   const supabase = await createClient()
-
   const titulo = formData.get('titulo') as string
   const descripcion = formData.get('descripcion') as string
   const contenido = formData.get('contenido') as string
@@ -76,6 +83,10 @@ export async function actualizarNoticia(id: string, formData: FormData) {
   const destacada = formData.get('destacada') === 'on'
   const publicado = formData.get('publicado') === 'on'
   const imagenFile = formData.get('imagen') as File
+  const eliminarImagen = formData.get('eliminar_imagen') === 'true'
+
+  const { data: actual } = await supabase.from('noticias').select('imagen').eq('id', id).single()
+  const imagenAnterior = actual?.imagen as string | null | undefined
 
   const datosActualizar: Record<string, unknown> = {
     titulo,
@@ -92,34 +103,47 @@ export async function actualizarNoticia(id: string, formData: FormData) {
     const { error: uploadError } = await supabase.storage
       .from('noticias-imagenes')
       .upload(nombreArchivo, imagenFile)
-
     if (uploadError) {
       return { error: 'Error al subir la imagen: ' + uploadError.message }
     }
-
     const { data: publicUrlData } = supabase.storage
       .from('noticias-imagenes')
       .getPublicUrl(nombreArchivo)
-
     datosActualizar.imagen = publicUrlData.publicUrl
+
+    const pathAnterior = extraerPathStorage(imagenAnterior, 'noticias-imagenes')
+    if (pathAnterior) {
+      await supabase.storage.from('noticias-imagenes').remove([pathAnterior])
+    }
+  } else if (eliminarImagen) {
+    const pathAnterior = extraerPathStorage(imagenAnterior, 'noticias-imagenes')
+    if (pathAnterior) {
+      await supabase.storage.from('noticias-imagenes').remove([pathAnterior])
+    }
+    datosActualizar.imagen = null
   }
 
   const { error } = await supabase.from('noticias').update(datosActualizar).eq('id', id)
-
   if (error) {
     return { error: 'Error al actualizar la noticia: ' + error.message }
   }
-
   revalidatePath('/admin')
   return { success: true }
 }
 
 export async function borrarNoticia(id: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('noticias').delete().eq('id', id)
 
+  const { data: actual } = await supabase.from('noticias').select('imagen').eq('id', id).single()
+  const pathImagen = extraerPathStorage(actual?.imagen as string | null | undefined, 'noticias-imagenes')
+
+  const { error } = await supabase.from('noticias').delete().eq('id', id)
   if (error) {
     return { error: 'Error al borrar la noticia: ' + error.message }
+  }
+
+  if (pathImagen) {
+    await supabase.storage.from('noticias-imagenes').remove([pathImagen])
   }
 
   revalidatePath('/admin')

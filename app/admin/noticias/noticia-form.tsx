@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { crearNoticia, actualizarNoticia } from '../actions'
 
@@ -25,7 +25,29 @@ export default function NoticiaForm({
 }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [preview, setPreview] = useState<string | null>(noticia?.imagen ?? null)
+  const [eliminarImagen, setEliminarImagen] = useState(false)
+  const [arrastrando, setArrastrando] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+
+  function setArchivo(files: FileList | null | undefined) {
+    if (!files || !files[0]) return
+    const file = files[0]
+    if (fileInputRef.current) {
+      const dt = new DataTransfer()
+      dt.items.add(file)
+      fileInputRef.current.files = dt.files
+    }
+    setPreview(URL.createObjectURL(file))
+    setEliminarImagen(false)
+  }
+
+  function quitarImagen() {
+    setPreview(null)
+    setEliminarImagen(true)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   async function handleSubmit(formData: FormData) {
     setLoading(true)
@@ -73,11 +95,83 @@ export default function NoticiaForm({
       </div>
 
       <div style={{ marginBottom: 12 }}>
-        <label>Imagen {noticia?.imagen && '(dejar vacio para conservar la actual)'}</label>
-        <input type="file" name="imagen" accept="image/*" style={{ width: '100%' }} />
-        {noticia?.imagen && (
-          <img src={noticia.imagen} alt="" style={{ maxWidth: 200, marginTop: 8 }} />
-        )}
+        <label>Imagen</label>
+
+        <div
+          tabIndex={0}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setArrastrando(true)
+          }}
+          onDragLeave={() => setArrastrando(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setArrastrando(false)
+            setArchivo(e.dataTransfer.files)
+          }}
+          onPaste={(e) => {
+            const files = e.clipboardData?.files
+            if (files && files.length > 0) {
+              e.preventDefault()
+              setArchivo(files)
+            }
+          }}
+          onClick={() => fileInputRef.current?.click()}
+          style={{
+            border: arrastrando ? '2px dashed #063B73' : '2px dashed #ccc',
+            borderRadius: 8,
+            padding: 16,
+            textAlign: 'center',
+            cursor: 'pointer',
+            background: arrastrando ? '#f0f6ff' : '#fafafa',
+            outline: 'none',
+          }}
+        >
+          {preview ? (
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <img src={preview} alt="" style={{ maxWidth: 240, maxHeight: 180, borderRadius: 6 }} />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  quitarImagen()
+                }}
+                style={{
+                  position: 'absolute',
+                  top: -8,
+                  right: -8,
+                  background: '#c62828',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 26,
+                  height: 26,
+                  cursor: 'pointer',
+                }}
+                aria-label="Quitar imagen"
+              >
+                x
+              </button>
+              <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
+                Click, arrastra o pega (Ctrl+V) para reemplazar
+              </div>
+            </div>
+          ) : (
+            <div style={{ color: '#666', fontSize: 14 }}>
+              Arrastra una imagen aqui, pegala (Ctrl+V), o haz click para seleccionar
+            </div>
+          )}
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          name="imagen"
+          accept="image/*"
+          onChange={(e) => setArchivo(e.target.files)}
+          style={{ display: 'none' }}
+        />
+        <input type="hidden" name="eliminar_imagen" value={eliminarImagen ? 'true' : 'false'} readOnly />
       </div>
 
       <div style={{ marginBottom: 12, display: 'flex', gap: 16 }}>

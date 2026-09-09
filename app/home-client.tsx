@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { NoticiaCard, VideoItem, CancionItem } from "@/lib/home-data";
 import SiteFooter from "@/components/site-footer";
 import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
@@ -48,6 +49,9 @@ export default function HomeClient({
   const [videoActivoId, setVideoActivoId] = useState<string | undefined>(undefined);
   const [reproduciendo, setReproduciendo] = useState(false);
   const [cancionActivaId, setCancionActivaId] = useState<string | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mostrarUltimaHora, setMostrarUltimaHora] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const hoy = new Date();
@@ -107,12 +111,34 @@ export default function HomeClient({
               <a
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 rounded text-slate-700 hover:text-[#063B73] hover:bg-slate-100 transition"
+                className="px-3 py-2 rounded text-slate-700 hover:text-[#C9972B] border-b-2 border-transparent hover:border-[#C9972B] transition"
               >
                 {link.label}
               </a>
             ))}
           </nav>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                router.push(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
+              }
+            }}
+            className="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-2 gap-2"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar noticias..."
+              className="bg-transparent outline-none text-sm w-40"
+            />
+          </form>
 
           <button
             className="md:hidden w-10 h-10 flex items-center justify-center rounded border border-slate-200"
@@ -132,12 +158,34 @@ export default function HomeClient({
 
         {menuOpen && (
           <nav className="md:hidden border-t border-slate-200 px-4 py-3 flex flex-col gap-1">
-            {navLinks.map((link) => (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                setMenuOpen(false);
+                router.push(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
+              }
+            }}
+            className="flex items-center bg-slate-100 rounded-lg px-3 py-2 gap-2 mb-2"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar noticias..."
+              className="bg-transparent outline-none text-sm flex-1"
+            />
+          </form>
+          {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="px-2 py-3 font-bold text-sm text-slate-700 border-b border-slate-100"
+                className="px-2 py-3 font-bold text-sm text-slate-700 hover:text-[#C9972B] border-b border-slate-100 transition"
               >
                 {link.label}
               </a>
@@ -146,16 +194,29 @@ export default function HomeClient({
         )}
       </header>
 
-      <div className="bg-[#c62828] text-white">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-4">
-          <span className="text-xs font-extrabold tracking-wide border-r border-white/40 pr-4 whitespace-nowrap">
-            ULTIMA HORA
-          </span>
-          <span className="text-sm truncate">
-            {ultimasNoticias[breakingIndex]}
-          </span>
+      {mostrarUltimaHora && (
+        <div className="bg-[#c62828] text-white">
+          <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-4">
+            <span className="text-xs font-extrabold tracking-wide border-r border-white/40 pr-4 whitespace-nowrap">
+              ULTIMA HORA
+            </span>
+            <span className="text-sm truncate flex-1">
+              {ultimasNoticias[breakingIndex]}
+            </span>
+            <button
+              type="button"
+              onClick={() => setMostrarUltimaHora(false)}
+              aria-label="Cerrar aviso"
+              className="text-white/80 hover:text-white flex-shrink-0"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4">
 
