@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -135,7 +135,7 @@ export default async function NoticiaPage({
           </div>
         )}
 
-        <div className="mt-8 space-y-4 text-slate-700 text-base leading-relaxed">
+        <div className="mt-8 space-y-5 text-slate-700 text-lg leading-loose text-justify">
           {parrafos.length ? (
             parrafos.map((p: string, i: number) => <p key={i}>{p}</p>)
           ) : (
