@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -202,26 +202,26 @@ export default function HomeClient({
               <Link
                 key={n.id}
                 href={`/noticias/${n.slug}`}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex flex-col h-full"
               >
-                <div className="h-48">
+                <div className="h-48 flex-shrink-0">
                   <img
                     src={n.imagen}
                     alt={n.titulo}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex flex-col flex-1">
                   <span className="text-[#C9972B] font-extrabold text-xs">
                     {n.categoria}
                   </span>
                   <h3 className="mt-2 text-lg font-bold text-[#063B73] leading-snug">
                     {n.titulo}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">
                     {n.descripcion}
                   </p>
-                  <span className="block mt-3 text-xs text-slate-400">
+                  <span className="block mt-auto pt-3 text-xs text-slate-400">
                     {n.fechaHora}
                   </span>
                 </div>
@@ -250,26 +250,26 @@ export default function HomeClient({
               <Link
                 key={n.id}
                 href={`/noticias/${n.slug}`}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex flex-col h-full"
               >
-                <div className="h-48">
+                <div className="h-48 flex-shrink-0">
                   <img
                     src={n.imagen}
                     alt={n.titulo}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex flex-col flex-1">
                   <span className="text-[#C9972B] font-extrabold text-xs">
                     {n.categoria}
                   </span>
                   <h3 className="mt-2 text-lg font-bold text-[#063B73] leading-snug">
                     {n.titulo}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">
                     {n.descripcion}
                   </p>
-                  <span className="block mt-3 text-xs text-slate-400">
+                  <span className="block mt-auto pt-3 text-xs text-slate-400">
                     {n.fecha}
                   </span>
                 </div>
@@ -292,26 +292,26 @@ export default function HomeClient({
               <Link
                 key={n.id}
                 href={`/noticias/${n.slug}`}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex flex-col h-full"
               >
-                <div className="h-48">
+                <div className="h-48 flex-shrink-0">
                   <img
                     src={n.imagen}
                     alt={n.titulo}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex flex-col flex-1">
                   <span className="text-[#C9972B] font-extrabold text-xs">
                     {n.categoria}
                   </span>
                   <h3 className="mt-2 text-lg font-bold text-[#063B73] leading-snug">
                     {n.titulo}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">
                     {n.descripcion}
                   </p>
-                  <span className="block mt-3 text-xs text-slate-400">
+                  <span className="block mt-auto pt-3 text-xs text-slate-400">
                     {n.fecha}
                   </span>
                 </div>
@@ -334,26 +334,26 @@ export default function HomeClient({
               <Link
                 key={n.id}
                 href={`/noticias/${n.slug}`}
-                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex flex-col h-full"
               >
-                <div className="h-48">
+                <div className="h-48 flex-shrink-0">
                   <img
                     src={n.imagen}
                     alt={n.titulo}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex flex-col flex-1">
                   <span className="text-[#C9972B] font-extrabold text-xs">
                     {n.categoria}
                   </span>
                   <h3 className="mt-2 text-lg font-bold text-[#063B73] leading-snug">
                     {n.titulo}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">
                     {n.descripcion}
                   </p>
-                  <span className="block mt-3 text-xs text-slate-400">
+                  <span className="block mt-auto pt-3 text-xs text-slate-400">
                     {n.fecha}
                   </span>
                 </div>
