@@ -39,3 +39,40 @@ body {
   opacity: 0;
   animation: fadeInUp 0.7s ease-out forwards;
 }
+
+/* ===== Modo oscuro (aplica sobre clases fijas de Tailwind) ===== */
+html.theme-dark {
+  --background: #0f1420;
+  --foreground: #e2e4ea;
+}
+
+html.theme-dark body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+html.theme-dark .bg-white,
+html.theme-dark .bg-slate-50 {
+  background-color: #171d2b !important;
+}
+
+html.theme-dark .bg-slate-100 {
+  background-color: #1d2433 !important;
+}
+
+html.theme-dark .text-slate-900,
+html.theme-dark .text-slate-800,
+html.theme-dark .text-slate-700 {
+  color: #e2e4ea !important;
+}
+
+html.theme-dark .text-slate-600,
+html.theme-dark .text-slate-500,
+html.theme-dark .text-slate-400 {
+  color: #9aa0ab !important;
+}
+
+html.theme-dark .border-slate-200,
+html.theme-dark .border-slate-300 {
+  border-color: #2a3142 !important;
+}
