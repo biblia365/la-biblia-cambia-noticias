@@ -21,15 +21,12 @@ export default function SiteFooter({ redes }: { redes?: Redes }) {
         <div className="grid md:grid-cols-4 gap-10">
           <div>
             <Image
-              src="/logo-icono.png"
+              src="/LOGO-ISRAEL.png"
               alt="La Biblia Cambia Noticias"
-              width={100}
-              height={100}
-              className="w-16 h-16 object-contain"
+              width={260}
+              height={90}
+              className="h-16 w-auto object-contain"
             />
-            <h2 className="text-white text-xl font-extrabold mt-4">
-              LA BIBLIA CAMBIA NOTICIAS
-            </h2>
             <p className="text-sm mt-3 max-w-xs leading-relaxed">
               Un medio de comunicacion dedicado a informar con responsabilidad sobre la actualidad cristiana, la comunidad y las historias de esperanza.
             </p>
