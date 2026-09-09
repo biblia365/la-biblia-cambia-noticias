@@ -25,6 +25,11 @@ export type CancionItem = {
   portada: string | null
 }
 
+export type AvisoUrgente = {
+  texto: string
+  activo: boolean
+}
+
 const IMG_FALLBACK =
   'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1200&q=80'
 
@@ -77,7 +82,7 @@ function tomarPorCategoria(
 export async function getHomeData() {
   const supabase = await createClient()
 
-  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }] =
+  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }, { data: avisoRaw }] =
     await Promise.all([
       supabase
         .from('noticias')
@@ -102,6 +107,11 @@ export async function getHomeData() {
         .select('id, titulo, artista, url, portada')
         .order('created_at', { ascending: false })
         .limit(20),
+      supabase
+        .from('aviso_urgente')
+        .select('texto, activo')
+        .order('updated_at', { ascending: false })
+        .limit(1),
     ])
 
   const pool = (noticiasRaw ?? []).map(mapNoticia)
@@ -140,6 +150,10 @@ export async function getHomeData() {
     portada: c.portada,
   }))
 
+  const aviso: AvisoUrgente = avisoRaw?.[0]
+    ? { texto: avisoRaw[0].texto, activo: avisoRaw[0].activo }
+    : { texto: '', activo: false }
+
   const redesMap = new Map<string, string>()
   ;(redesRaw ?? []).forEach((r: any) => redesMap.set(r.plataforma.toLowerCase(), r.url))
 
@@ -153,6 +167,7 @@ export async function getHomeData() {
     versiculo,
     videos,
     canciones,
+    aviso,
     redes: {
       facebook: redesMap.get('facebook') || '#',
       youtube: redesMap.get('youtube') || '#',

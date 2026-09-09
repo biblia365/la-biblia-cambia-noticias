@@ -283,3 +283,20 @@ export async function borrarCancion(id: string) {
   revalidatePath('/')
   return { success: true }
 }
+
+export async function guardarAviso(formData: FormData) {
+  const supabase = await createClient()
+  const texto = formData.get('texto') as string
+  const activo = formData.get('activo') === 'on'
+
+  const { error } = await supabase.from('aviso_urgente').insert({
+    texto,
+    activo,
+  })
+  if (error) {
+    return { error: 'Error al guardar el aviso: ' + error.message }
+  }
+  revalidatePath('/admin/aviso')
+  revalidatePath('/')
+  return { success: true }
+}

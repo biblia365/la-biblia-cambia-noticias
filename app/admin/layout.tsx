@@ -8,6 +8,7 @@ const NAV = [
   { href: '/admin/versiculo', label: 'VersÃ­culo del dÃ­a' },
   { href: '/admin/videos', label: 'Videos' },
   { href: '/admin/musica', label: 'Musica' },
+  { href: '/admin/aviso', label: 'Aviso Urgente' },
   { href: '/admin/redes', label: 'Redes Sociales' },
 ]
 
