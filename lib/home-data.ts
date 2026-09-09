@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+﻿import { createClient } from '@/lib/supabase/server'
 
 export type NoticiaCard = {
   id: string
@@ -143,6 +143,7 @@ export async function getHomeData() {
 
   const nacionales = tomarPorCategoria(pool, usados, 'nacional', 3)
   const internacionales = tomarPorCategoria(pool, usados, 'internacional', 3)
+  const israel = tomarPorCategoria(pool, usados, 'israel', 3)
   const analisisLista = tomarPorCategoria(pool, usados, 'analisis', 1)
   const analisis = analisisLista[0]
 
@@ -189,6 +190,7 @@ export async function getHomeData() {
     heroSide,
     nacionales,
     internacionales,
+    israel,
     analisis,
     ultimasNoticias: ultimasNoticias.length ? ultimasNoticias : ['Aun no hay noticias publicadas.'],
     versiculo,
@@ -204,3 +206,4 @@ export async function getHomeData() {
     },
   }
 }
+

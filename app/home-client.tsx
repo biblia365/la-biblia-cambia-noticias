@@ -25,6 +25,7 @@ type Props = {
   heroSide: NoticiaCard[];
   nacionales: NoticiaCard[];
   internacionales: NoticiaCard[];
+  israel: NoticiaCard[];
   analisis?: NoticiaCard;
   ultimasNoticias: string[];
   versiculo: { texto: string; referencia: string };
@@ -40,6 +41,7 @@ export default function HomeClient({
   heroSide,
   nacionales,
   internacionales,
+  israel,
   analisis,
   ultimasNoticias,
   versiculo,
@@ -243,6 +245,47 @@ export default function HomeClient({
           </div>
         </section>
 
+        <section id="israel" className="py-8">
+          <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
+            <h2 className="text-2xl font-extrabold text-[#063B73]">
+              Noticias de Israel
+            </h2>
+            <a href="#" className="text-sm font-bold text-[#C9972B] hover:text-[#b78620]">
+              VER TODAS
+            </a>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {israel.map((n) => (
+              <Link
+                key={n.id}
+                href={`/noticias/${n.slug}`}
+                className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition block"
+              >
+                <div className="h-48">
+                  <img
+                    src={n.imagen}
+                    alt={n.titulo}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-5">
+                  <span className="text-[#C9972B] font-extrabold text-xs">
+                    {n.categoria}
+                  </span>
+                  <h3 className="mt-2 text-lg font-bold text-[#063B73] leading-snug">
+                    {n.titulo}
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {n.descripcion}
+                  </p>
+                  <span className="block mt-3 text-xs text-slate-400">
+                    {n.fecha}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
         {analisis && (
           <section id="fe" className="py-8">
             <div className="grid md:grid-cols-[1.4fr_1fr] rounded-xl overflow-hidden bg-[#063B73]">

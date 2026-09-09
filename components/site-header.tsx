@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -9,8 +9,8 @@ const navLinks = [
   { href: "/#inicio", label: "INICIO" },
   { href: "/#nacionales", label: "NACIONALES" },
   { href: "/#internacionales", label: "INTERNACIONALES" },
+  { href: "/#israel", label: "ISRAEL" },
   { href: "/#fe", label: "FE Y COMUNIDAD" },
-  { href: "/#videos", label: "VIDEOS" },
   { href: "/biblia", label: "BIBLIA" },
   { href: "/#reflexion", label: "REFLEXION" },
 ];
