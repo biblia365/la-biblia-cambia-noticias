@@ -89,7 +89,7 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-            <Image src="/logo-icono.png" alt="La Biblia Cambia Noticias" width={56} height={56} className="w-12 h-12 md:w-14 md:h-14 object-contain" priority />
+            <Image src="/logo-icono.png" alt="La Biblia Cambia Noticias" width={90} height={90} className="w-16 h-16 md:w-20 md:h-20 object-contain" priority />
             <div className="leading-tight whitespace-nowrap">
               <span className="block text-base md:text-xl font-extrabold text-[#063B73] tracking-tight whitespace-nowrap">
                 LA BIBLIA CAMBIA
