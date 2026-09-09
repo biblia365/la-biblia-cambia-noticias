@@ -94,7 +94,7 @@ export default async function BibliaPage({
           {error && <p className="text-red-500">{error}</p>}
 
           {!error && (
-            <div className="space-y-3 font-serif text-lg leading-relaxed text-slate-800">
+            <div className="space-y-3 font-serif text-lg leading-relaxed text-slate-800 text-justify">
               {versiculos.map((v) => (
                 <p key={v.id}>
                   <sup className="text-[#C9972B] font-bold mr-1">{v.number}</sup>
