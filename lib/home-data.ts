@@ -88,6 +88,20 @@ function tomarPorCategoria(
   return elegidas
 }
 
+function momentoActualColombia(): "dia" | "noche" {
+  const hora = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Bogota",
+      hour: "numeric",
+      hour12: false,
+    }).format(new Date())
+  )
+  return hora >= 6 && hora < 18 ? "dia" : "noche"
+}
+
+function fechaColombiaHoy(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Bogota" }).format(new Date())
+}
 export async function getHomeData() {
   const supabase = await createClient()
 
@@ -101,10 +115,10 @@ export async function getHomeData() {
         .limit(30),
       supabase
         .from('versiculo_dia')
-        .select('texto, referencia')
+        .select('texto, referencia, imagen, momento, fecha')
         .eq('activo', true)
-        .order('updated_at', { ascending: false })
-        .limit(1),
+        .order('fecha', { ascending: false })
+        .limit(10),
       supabase
         .from('videos')
         .select('id, titulo, url')
@@ -149,9 +163,27 @@ export async function getHomeData() {
 
   const ultimasNoticias = pool.slice(0, 5).map((n) => n.titulo)
 
-  const versiculo = versiculoRaw?.[0]
-    ? { texto: versiculoRaw[0].texto, referencia: versiculoRaw[0].referencia }
-    : { texto: 'El Senor es mi pastor; nada me faltara.', referencia: 'Salmos 23:1' }
+  const momentoActual = momentoActualColombia()
+  const fechaHoy = fechaColombiaHoy()
+  const lista = versiculoRaw ?? []
+  const versiculoElegido =
+    lista.find((v: any) => v.fecha === fechaHoy && v.momento === momentoActual) ??
+    lista.find((v: any) => v.momento === momentoActual) ??
+    lista[0]
+
+  const versiculo = versiculoElegido
+    ? {
+        texto: versiculoElegido.texto,
+        referencia: versiculoElegido.referencia,
+        imagen: versiculoElegido.imagen as string | null,
+        momento: (versiculoElegido.momento as "dia" | "noche" | null) ?? momentoActual,
+      }
+    : {
+        texto: 'El Senor es mi pastor; nada me faltara.',
+        referencia: 'Salmos 23:1',
+        imagen: null as string | null,
+        momento: momentoActual,
+      }
 
   const videos: VideoItem[] = (videosRaw ?? []).map((v: any) => ({
     id: v.id,
@@ -206,6 +238,8 @@ export async function getHomeData() {
     },
   }
 }
+
+
 
 
 

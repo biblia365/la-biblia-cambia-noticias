@@ -28,7 +28,7 @@ type Props = {
   israel: NoticiaCard[];
   analisis?: NoticiaCard;
   ultimasNoticias: string[];
-  versiculo: { texto: string; referencia: string };
+  versiculo: { texto: string; referencia: string; imagen: string | null; momento: "dia" | "noche" };
   videos: VideoItem[];
   canciones: CancionItem[];
   aviso: AvisoUrgente;
@@ -96,6 +96,37 @@ export default function HomeClient({
           </div>
         </div>
       )}
+
+      <section className="max-w-7xl mx-auto px-4 pt-6">
+        <div className="relative rounded-xl overflow-hidden min-h-[220px] md:min-h-[260px] bg-[#0a1628] flex items-center">
+          {versiculo.imagen && (
+            <img
+              src={versiculo.imagen}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-30"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-[#0a1628]/85 to-[#0a1628]/40" />
+          <div className="relative px-6 py-8 md:px-10 md:py-10 max-w-2xl text-white">
+            <div className="flex items-center gap-2 mb-4 text-sm font-bold">
+              <span className="text-[#C9972B] text-lg">
+                {versiculo.momento === "noche" ? "\u{1F319}" : "\u2600\uFE0F"}
+              </span>
+              <span className="uppercase tracking-wide">
+                {versiculo.momento === "noche" ? "Versiculo de la noche" : "Versiculo del dia"}
+              </span>
+              <span className="text-slate-400">|</span>
+              <span className="italic text-[#C9972B]">{versiculo.referencia}</span>
+            </div>
+            <blockquote className="font-serif text-xl md:text-2xl leading-relaxed">
+              &laquo;&nbsp;{versiculo.texto}&nbsp;&raquo;
+            </blockquote>
+            <span className="block mt-6 text-xs text-slate-300 font-semibold">
+              {fecha}
+            </span>
+          </div>
+        </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4">
 
@@ -316,20 +347,6 @@ export default function HomeClient({
             </div>
           </section>
         )}
-
-        <section id="reflexion" className="py-8">
-          <div className="bg-white border border-slate-200 border-l-4 border-l-[#C9972B] p-8 md:p-10 text-center rounded">
-            <h2 className="text-xs uppercase tracking-[0.2em] text-[#063B73] font-bold mb-4">
-              Versiculo del dia
-            </h2>
-            <blockquote className="font-serif text-xl md:text-2xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
-              &quot;{versiculo.texto}&quot;
-            </blockquote>
-            <cite className="block mt-4 text-[#C9972B] font-bold not-italic text-sm">
-              {versiculo.referencia}
-            </cite>
-          </div>
-        </section>
 
         <section id="videos" className="py-8">
           <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">
