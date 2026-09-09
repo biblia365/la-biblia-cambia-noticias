@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -231,13 +231,13 @@ export default function HomeClient({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
-                <span className="inline-block bg-[#C9972B] text-[#04223f] text-xs font-extrabold px-3 py-1 rounded uppercase">
+                <span className="inline-block bg-[#C9972B] text-[#04223f] text-xs font-extrabold px-3 py-1 rounded uppercase animate-fade-in-up" style={{ animationDelay: "0ms" }}>
                   {principal.categoria}
                 </span>
-                <h2 className="text-2xl md:text-4xl font-extrabold mt-3 max-w-xl leading-tight">
+                <h2 className="text-2xl md:text-4xl font-extrabold mt-3 max-w-xl leading-tight animate-fade-in-up" style={{ animationDelay: "120ms" }}>
                   {principal.titulo}
                 </h2>
-                <p className="text-slate-200 mt-2 max-w-lg text-sm md:text-base">
+                <p className="text-slate-200 mt-2 max-w-lg text-sm md:text-base animate-fade-in-up" style={{ animationDelay: "240ms" }}>
                   {principal.descripcion}
                 </p>
               </div>
