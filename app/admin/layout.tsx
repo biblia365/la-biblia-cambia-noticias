@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import LogoutButton from './logout-button'
 
@@ -9,6 +9,7 @@ const NAV = [
   { href: '/admin/videos', label: 'Videos' },
   { href: '/admin/musica', label: 'Musica' },
   { href: '/admin/anuncios', label: 'Anuncios' },
+  { href: '/admin/suscriptores', label: 'Suscriptores' },
   { href: '/admin/aviso', label: 'Aviso Urgente' },
   { href: '/admin/redes', label: 'Redes Sociales' },
 ]

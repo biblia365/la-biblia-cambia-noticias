@@ -9,6 +9,7 @@ import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
 import AnuncioBanner from "@/components/anuncio-banner";
+import FormularioSuscripcion from "@/components/formulario-suscripcion";
 
 const navLinks = [
   { href: "#inicio", label: "INICIO" },
@@ -546,16 +547,7 @@ export default function HomeClient({
                 Suscribete y recibe las principales noticias cristianas en tu correo electronico.
               </p>
             </div>
-            <div className="flex w-full md:w-auto md:min-w-[420px]">
-              <input
-                type="email"
-                placeholder="Tu correo electronico"
-                className="flex-1 px-4 py-3 border border-slate-300 border-r-0 outline-none rounded-l-lg"
-              />
-              <button className="bg-[#063B73] hover:bg-[#052a52] text-white font-extrabold text-xs px-6 rounded-r-lg transition">
-                SUSCRIBIRME
-              </button>
-            </div>
+            <FormularioSuscripcion />
           </div>
         </section>
 

@@ -407,3 +407,32 @@ export async function borrarAnuncio(id: string) {
   revalidatePath('/')
   return { success: true }
 }
+export async function suscribirseNewsletter(formData: FormData) {
+  const supabase = await createClient()
+  const email = (formData.get('email') as string || '').trim().toLowerCase()
+
+  if (!email || !email.includes('@')) {
+    return { error: 'Ingresa un correo valido' }
+  }
+
+  const { error } = await supabase.from('suscriptores').insert({ email })
+
+  if (error) {
+    if (error.code === '23505') {
+      return { error: 'Este correo ya esta suscrito' }
+    }
+    return { error: 'No se pudo suscribir. Intenta de nuevo.' }
+  }
+
+  return { success: true }
+}
+
+export async function borrarSuscriptor(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('suscriptores').delete().eq('id', id)
+  if (error) {
+    return { error: 'Error al borrar: ' + error.message }
+  }
+  revalidatePath('/admin/suscriptores')
+  return { success: true }
+}
