@@ -27,6 +27,7 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const [fecha, setFecha] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const router = useRouter();
 
@@ -87,8 +88,20 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
       </div>
 
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+        <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-3 items-center md:flex md:justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => { setSearchOpen(!searchOpen); setMenuOpen(false); }}
+            aria-label="Buscar"
+            className="md:hidden w-10 h-10 flex items-center justify-center justify-self-start rounded border border-slate-200 flex-shrink-0"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0 justify-self-center md:justify-self-auto">
             <Image src="/LOGO-ISRAEL.png" alt="La Biblia Cambia Noticias" width={220} height={70} className="h-12 md:h-16 w-auto object-contain" priority />
           </Link>
 
@@ -145,12 +158,40 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar..." className="bg-white outline-none text-sm w-24 lg:w-36" />
           </form>
 
-          <button className="md:hidden w-10 h-10 flex items-center justify-center rounded border border-slate-200 flex-shrink-0" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">
+          <button className="md:hidden w-10 h-10 flex items-center justify-center justify-self-end rounded border border-slate-200 flex-shrink-0" onClick={() => { setMenuOpen(!menuOpen); setSearchOpen(false); }} aria-label="Abrir menu">
             <svg width="22" height="22" viewBox="0 0 30 30">
               <path d="M4 7H26M4 15H26M4 23H26" stroke="#063B73" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
+
+        {searchOpen && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                setSearchOpen(false);
+                router.push(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
+              }
+            }}
+            className="md:hidden border-t border-slate-200 px-4 py-3 flex items-center bg-white"
+          >
+            <div className="flex items-center bg-white border border-slate-300 rounded-lg px-3 py-2 gap-2 flex-1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#063B73" strokeWidth="2">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar noticias..."
+                className="bg-white outline-none text-sm flex-1"
+              />
+            </div>
+          </form>
+        )}
 
         {menuOpen && (
           <nav className="md:hidden border-t border-slate-200 px-4 py-3 flex flex-col gap-1">
