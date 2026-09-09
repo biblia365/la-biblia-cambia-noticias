@@ -4,10 +4,11 @@ import LogoutButton from './logout-button'
 
 const NAV = [
   { href: '/admin/noticias', label: 'Noticias' },
-  { href: '/admin/categorias', label: 'CategorÃ­as' },
-  { href: '/admin/versiculo', label: 'VersÃ­culo del dÃ­a' },
+  { href: '/admin/categorias', label: 'Categorias' },
+  { href: '/admin/versiculo', label: 'Versiculo del dia' },
   { href: '/admin/videos', label: 'Videos' },
   { href: '/admin/musica', label: 'Musica' },
+  { href: '/admin/anuncios', label: 'Anuncios' },
   { href: '/admin/aviso', label: 'Aviso Urgente' },
   { href: '/admin/redes', label: 'Redes Sociales' },
 ]
@@ -39,7 +40,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             La Biblia Cambia
           </div>
           <div style={{ fontSize: 12, color: '#8B8FA3', marginTop: 2, letterSpacing: '.02em' }}>
-            Panel de administraciÃ³n
+            Panel de administracion
           </div>
         </div>
 
@@ -62,13 +63,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </nav>
 
         <div style={{ marginTop: 'auto', padding: '16px 24px 0', borderTop: '1px solid #2C3040' }}>
+          
           <a
             href="/"
             target="_blank"
             rel="noreferrer"
             style={{ fontSize: 12.5, color: '#8B8FA3', textDecoration: 'none' }}
           >
-            Ver sitio pÃºblico â†’
+            Ver sitio publico
           </a>
         </div>
       </aside>

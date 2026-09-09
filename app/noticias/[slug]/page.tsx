@@ -6,6 +6,7 @@ import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import ComentariosSeccion from "@/components/comentarios-seccion";
 import { obtenerVistaPreviaFuente } from "@/lib/og-preview";
+import AnuncioBanner from "@/components/anuncio-banner";
 
 function formatFechaHora(iso: string) {
   const d = new Date(iso);
@@ -71,6 +72,15 @@ export default async function NoticiaPage({
   const fuentePreview = noticia.fuente_url
     ? await obtenerVistaPreviaFuente(noticia.fuente_url)
     : null;
+
+  const { data: anuncioNoticiaRaw } = await supabase
+    .from("anuncios")
+    .select("id, titulo, descripcion, imagen, link, texto_boton")
+    .eq("activo", true)
+    .in("ubicacion", ["noticia", "ambos"])
+    .order("created_at", { ascending: false })
+    .limit(1);
+  const anuncioNoticia = anuncioNoticiaRaw?.[0] || null;
   const parrafos = (noticia.contenido || noticia.descripcion || "")
     .split("\n")
     .map((p: string) => p.trim())
@@ -200,6 +210,12 @@ export default async function NoticiaPage({
           </section>
         )}
 
+        {anuncioNoticia && (
+          <div className="mt-10">
+            <AnuncioBanner anuncio={anuncioNoticia} />
+          </div>
+        )}
+
         <ComentariosSeccion
           noticiaId={noticia.id}
           comentariosIniciales={comentariosIniciales || []}
@@ -210,7 +226,7 @@ export default async function NoticiaPage({
             href="/"
             className="text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition"
           >
-            ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Volver a todas las noticias
+            ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Volver a todas las noticias
           </Link>
         </div>
       </article>

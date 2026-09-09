@@ -1,13 +1,14 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { NoticiaCard, VideoItem, CancionItem, AvisoUrgente } from "@/lib/home-data";
+import type { NoticiaCard, VideoItem, CancionItem, AvisoUrgente , AnuncioItem } from "@/lib/home-data";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import { getYoutubeThumbnail, getYoutubeEmbedUrl } from "@/lib/youtube";
+import AnuncioBanner from "@/components/anuncio-banner";
 
 const navLinks = [
   { href: "#inicio", label: "INICIO" },
@@ -30,6 +31,7 @@ type Props = {
   videos: VideoItem[];
   canciones: CancionItem[];
   aviso: AvisoUrgente;
+  anuncioLanding: AnuncioItem | null;
   redes: { facebook: string; youtube: string; instagram: string; tiktok: string };
 };
 
@@ -44,6 +46,7 @@ export default function HomeClient({
   videos,
   canciones,
   aviso,
+  anuncioLanding,
   redes,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -191,6 +194,12 @@ export default function HomeClient({
             ))}
           </div>
         </section>
+
+        {anuncioLanding && (
+          <section className="py-6">
+            <AnuncioBanner anuncio={anuncioLanding} />
+          </section>
+        )}
 
         <section id="internacionales" className="py-8">
           <div className="flex items-center justify-between border-b-2 border-[#063B73] pb-3 mb-6">

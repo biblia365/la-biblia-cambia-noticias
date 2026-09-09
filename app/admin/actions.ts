@@ -304,3 +304,106 @@ export async function guardarAviso(formData: FormData) {
   revalidatePath('/')
   return { success: true }
 }
+
+export async function crearAnuncio(formData: FormData) {
+  const supabase = await createClient()
+  const titulo = formData.get('titulo') as string
+  const descripcion = formData.get('descripcion') as string
+  const link = formData.get('link') as string
+  const texto_boton = (formData.get('texto_boton') as string) || 'Ver mas'
+  const ubicacion = formData.get('ubicacion') as string
+  const activo = formData.get('activo') === 'on'
+  const imagenFile = formData.get('imagen') as File
+
+  if (!imagenFile || imagenFile.size === 0) {
+    return { error: 'Debes seleccionar una imagen' }
+  }
+
+  const nombreArchivo = `${Date.now()}-${imagenFile.name}`
+  const { error: uploadError } = await supabase.storage
+    .from('anuncios')
+    .upload(nombreArchivo, imagenFile)
+  if (uploadError) {
+    return { error: 'Error al subir la imagen: ' + uploadError.message }
+  }
+  const { data: publicUrlData } = supabase.storage.from('anuncios').getPublicUrl(nombreArchivo)
+
+  const { error } = await supabase.from('anuncios').insert({
+    titulo,
+    descripcion: descripcion || null,
+    imagen: publicUrlData.publicUrl,
+    link,
+    texto_boton,
+    ubicacion,
+    activo,
+  })
+  if (error) {
+    return { error: 'Error al crear el anuncio: ' + error.message }
+  }
+  revalidatePath('/admin/anuncios')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function actualizarAnuncio(id: string, formData: FormData) {
+  const supabase = await createClient()
+  const titulo = formData.get('titulo') as string
+  const descripcion = formData.get('descripcion') as string
+  const link = formData.get('link') as string
+  const texto_boton = (formData.get('texto_boton') as string) || 'Ver mas'
+  const ubicacion = formData.get('ubicacion') as string
+  const activo = formData.get('activo') === 'on'
+  const imagenFile = formData.get('imagen') as File
+
+  const datosActualizar: Record<string, unknown> = {
+    titulo,
+    descripcion: descripcion || null,
+    link,
+    texto_boton,
+    ubicacion,
+    activo,
+  }
+
+  if (imagenFile && imagenFile.size > 0) {
+    const { data: actual } = await supabase.from('anuncios').select('imagen').eq('id', id).single()
+    const nombreArchivo = `${Date.now()}-${imagenFile.name}`
+    const { error: uploadError } = await supabase.storage
+      .from('anuncios')
+      .upload(nombreArchivo, imagenFile)
+    if (uploadError) {
+      return { error: 'Error al subir la imagen: ' + uploadError.message }
+    }
+    const { data: publicUrlData } = supabase.storage.from('anuncios').getPublicUrl(nombreArchivo)
+    datosActualizar.imagen = publicUrlData.publicUrl
+
+    const pathAnterior = extraerPathStorage(actual?.imagen as string | null | undefined, 'anuncios')
+    if (pathAnterior) {
+      await supabase.storage.from('anuncios').remove([pathAnterior])
+    }
+  }
+
+  const { error } = await supabase.from('anuncios').update(datosActualizar).eq('id', id)
+  if (error) {
+    return { error: 'Error al actualizar el anuncio: ' + error.message }
+  }
+  revalidatePath('/admin/anuncios')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function borrarAnuncio(id: string) {
+  const supabase = await createClient()
+  const { data: actual } = await supabase.from('anuncios').select('imagen').eq('id', id).single()
+  const pathImagen = extraerPathStorage(actual?.imagen as string | null | undefined, 'anuncios')
+
+  const { error } = await supabase.from('anuncios').delete().eq('id', id)
+  if (error) {
+    return { error: 'Error al borrar el anuncio: ' + error.message }
+  }
+  if (pathImagen) {
+    await supabase.storage.from('anuncios').remove([pathImagen])
+  }
+  revalidatePath('/admin/anuncios')
+  revalidatePath('/')
+  return { success: true }
+}

@@ -1,4 +1,4 @@
-﻿import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 
 export type NoticiaCard = {
   id: string
@@ -28,6 +28,15 @@ export type CancionItem = {
 export type AvisoUrgente = {
   texto: string
   activo: boolean
+}
+
+export type AnuncioItem = {
+  id: string
+  titulo: string
+  descripcion: string | null
+  imagen: string
+  link: string
+  texto_boton: string
 }
 
 const IMG_FALLBACK =
@@ -82,7 +91,7 @@ function tomarPorCategoria(
 export async function getHomeData() {
   const supabase = await createClient()
 
-  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }, { data: avisoRaw }] =
+  const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }, { data: avisoRaw }, { data: anuncioRaw }] =
     await Promise.all([
       supabase
         .from('noticias')
@@ -111,6 +120,13 @@ export async function getHomeData() {
         .from('aviso_urgente')
         .select('texto, activo')
         .order('updated_at', { ascending: false })
+        .limit(1),
+      supabase
+        .from('anuncios')
+        .select('id, titulo, descripcion, imagen, link, texto_boton, ubicacion')
+        .eq('activo', true)
+        .in('ubicacion', ['landing', 'ambos'])
+        .order('created_at', { ascending: false })
         .limit(1),
     ])
 
@@ -154,6 +170,17 @@ export async function getHomeData() {
     ? { texto: avisoRaw[0].texto, activo: avisoRaw[0].activo }
     : { texto: '', activo: false }
 
+  const anuncioLanding: AnuncioItem | null = anuncioRaw?.[0]
+    ? {
+        id: anuncioRaw[0].id,
+        titulo: anuncioRaw[0].titulo,
+        descripcion: anuncioRaw[0].descripcion,
+        imagen: anuncioRaw[0].imagen,
+        link: anuncioRaw[0].link,
+        texto_boton: anuncioRaw[0].texto_boton,
+      }
+    : null
+
   const redesMap = new Map<string, string>()
   ;(redesRaw ?? []).forEach((r: any) => redesMap.set(r.plataforma.toLowerCase(), r.url))
 
@@ -168,6 +195,7 @@ export async function getHomeData() {
     videos,
     canciones,
     aviso,
+    anuncioLanding,
     redes: {
       facebook: redesMap.get('facebook') || '#',
       youtube: redesMap.get('youtube') || '#',
