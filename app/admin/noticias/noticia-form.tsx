@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -14,6 +14,7 @@ type Noticia = {
   destacada: boolean
   publicado: boolean
   imagen: string | null
+  fuente_url: string | null
 }
 
 export default function NoticiaForm({
@@ -92,6 +93,17 @@ export default function NoticiaForm({
             <option key={c.id} value={c.id}>{c.nombre}</option>
           ))}
         </select>
+      </div>
+
+      <div style={{ marginBottom: 12 }}>
+        <label>Link de fuente (Facebook, X, sitio web, etc.)</label>
+        <input
+          name="fuente_url"
+          type="url"
+          placeholder="https://facebook.com/..."
+          defaultValue={noticia?.fuente_url ?? ''}
+          style={{ width: '100%', padding: 8 }}
+        />
       </div>
 
       <div style={{ marginBottom: 12 }}>

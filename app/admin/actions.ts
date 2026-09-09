@@ -1,4 +1,4 @@
-﻿'use server'
+'use server'
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
@@ -32,6 +32,7 @@ export async function crearNoticia(formData: FormData) {
   const descripcion = formData.get('descripcion') as string
   const contenido = formData.get('contenido') as string
   const categoria_id = formData.get('categoria_id') as string
+  const fuente_url = formData.get('fuente_url') as string
   const destacada = formData.get('destacada') === 'on'
   const publicado = formData.get('publicado') === 'on'
   const imagenFile = formData.get('imagen') as File
@@ -61,6 +62,7 @@ export async function crearNoticia(formData: FormData) {
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
+    fuente_url: fuente_url || null,
     destacada,
     publicado,
     imagen: imagenUrl,
@@ -80,6 +82,7 @@ export async function actualizarNoticia(id: string, formData: FormData) {
   const descripcion = formData.get('descripcion') as string
   const contenido = formData.get('contenido') as string
   const categoria_id = formData.get('categoria_id') as string
+  const fuente_url = formData.get('fuente_url') as string
   const destacada = formData.get('destacada') === 'on'
   const publicado = formData.get('publicado') === 'on'
   const imagenFile = formData.get('imagen') as File
@@ -94,6 +97,7 @@ export async function actualizarNoticia(id: string, formData: FormData) {
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
+    fuente_url: fuente_url || null,
     destacada,
     publicado,
   }

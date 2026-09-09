@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
+import ComentariosSeccion from "@/components/comentarios-seccion";
 
 function formatFechaHora(iso: string) {
   const d = new Date(iso);
@@ -40,7 +41,7 @@ export default async function NoticiaPage({
 
   const { data: noticia } = await supabase
     .from("noticias")
-    .select("id, titulo, descripcion, contenido, imagen, created_at, categorias(nombre)")
+    .select("id, titulo, descripcion, contenido, imagen, created_at, categoria_id, fuente_url, categorias(nombre)")
     .eq("slug", slug)
     .eq("publicado", true)
     .single();
@@ -48,6 +49,21 @@ export default async function NoticiaPage({
   if (!noticia) {
     notFound();
   }
+
+  const { data: relacionadasRaw } = await supabase
+    .from("noticias")
+    .select("id, titulo, slug, imagen, created_at, categorias(nombre)")
+    .eq("categoria_id", (noticia as any).categoria_id)
+    .eq("publicado", true)
+    .neq("id", noticia.id)
+    .order("created_at", { ascending: false })
+    .limit(4);
+
+  const { data: comentariosIniciales } = await supabase
+    .from("comentarios")
+    .select("id, nombre, texto, created_at")
+    .eq("noticia_id", noticia.id)
+    .order("created_at", { ascending: false });
 
   const categoria = ((noticia as any).categorias?.nombre || "NOTICIAS").toUpperCase();
   const parrafos = (noticia.contenido || noticia.descripcion || "")
@@ -94,6 +110,19 @@ export default async function NoticiaPage({
           </a>
         </div>
 
+        {noticia.fuente_url && (
+          <div className="mt-4">
+            <a
+              href={noticia.fuente_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition underline"
+            >
+              Link de fuente
+            </a>
+          </div>
+        )}
+
         {noticia.imagen && (
           <div className="mt-6 rounded-xl overflow-hidden">
             <img
@@ -112,12 +141,44 @@ export default async function NoticiaPage({
           )}
         </div>
 
+        {relacionadasRaw && relacionadasRaw.length > 0 && (
+          <section className="mt-12 pt-8 border-t border-slate-200">
+            <h2 className="text-xl font-extrabold text-[#063B73] mb-5">
+              Articulos relacionados
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {relacionadasRaw.map((r: any) => (
+                <Link
+                  key={r.id}
+                  href={`/noticias/${r.slug}`}
+                  className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex gap-3"
+                >
+                  <img src={r.imagen} alt={r.titulo} className="w-28 h-24 object-cover flex-shrink-0" />
+                  <div className="py-3 pr-3">
+                    <span className="text-[#C9972B] font-extrabold text-[10px] uppercase">
+                      {r.categorias?.nombre || categoria}
+                    </span>
+                    <h3 className="mt-1 text-sm font-bold text-[#063B73] leading-snug">
+                      {r.titulo}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <ComentariosSeccion
+          noticiaId={noticia.id}
+          comentariosIniciales={comentariosIniciales || []}
+        />
+
         <div className="mt-10 pt-6 border-t border-slate-200">
           <Link
             href="/"
             className="text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition"
           >
-            â† Volver a todas las noticias
+            ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Volver a todas las noticias
           </Link>
         </div>
       </article>
