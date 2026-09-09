@@ -5,22 +5,29 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const navLinks = [
+const visibleLinks = [
   { href: "/#inicio", label: "INICIO" },
   { href: "/#nacionales", label: "NACIONALES" },
   { href: "/#internacionales", label: "INTERNACIONALES" },
   { href: "/#israel", label: "ISRAEL" },
+];
+
+const moreLinks = [
   { href: "/#fe", label: "FE Y COMUNIDAD" },
   { href: "/biblia", label: "BIBLIA" },
   { href: "/#reflexion", label: "REFLEXION" },
 ];
 
+const navLinks = [...visibleLinks, ...moreLinks];
+
 type Redes = { facebook: string; youtube: string; instagram: string; tiktok: string };
 
 export default function SiteHeader({ redes }: { redes: Redes }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [fecha, setFecha] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [dark, setDark] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +40,32 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
     });
     setFecha(texto.charAt(0).toUpperCase() + texto.slice(1));
   }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme");
+    const isDark = stored === "dark";
+    setDark(isDark);
+    document.documentElement.classList.toggle("theme-dark", isDark);
+  }, []);
+
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("theme-dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  }
+
+  const ThemeIcon = () =>
+    dark ? (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" strokeLinecap="round" />
+      </svg>
+    ) : (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
 
   return (
     <>
@@ -68,11 +101,40 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-0.5 font-extrabold text-[13px] flex-shrink-0">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <a key={link.href} href={link.href} className="px-2 py-2 whitespace-nowrap rounded text-slate-800 hover:text-[#C9972B] border-b-2 border-transparent hover:border-[#C9972B] transition">
                 {link.label}
               </a>
             ))}
+
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setMoreOpen(!moreOpen)}
+                onBlur={() => setTimeout(() => setMoreOpen(false), 150)}
+                className="px-2 py-2 whitespace-nowrap rounded text-slate-800 hover:text-[#C9972B] border-b-2 border-transparent hover:border-[#C9972B] transition"
+              >
+                MAS &#9662;
+              </button>
+              {moreOpen && (
+                <div className="absolute left-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 min-w-[180px] z-50">
+                  {moreLinks.map((link) => (
+                    <a key={link.href} href={link.href} className="block px-4 py-2 text-slate-800 hover:text-[#C9972B] hover:bg-slate-50 transition whitespace-nowrap">
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Cambiar color de la pagina"
+              className="ml-1 w-9 h-9 flex items-center justify-center rounded-full border border-slate-300 text-slate-700 hover:text-[#C9972B] hover:border-[#C9972B] transition"
+            >
+              <ThemeIcon />
+            </button>
           </nav>
 
           <form
@@ -121,6 +183,14 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
                 {link.label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center gap-2 px-2 py-3 font-extrabold text-sm text-slate-800 hover:text-[#C9972B] transition"
+            >
+              <ThemeIcon />
+              {dark ? "MODO CLARO" : "MODO OSCURO"}
+            </button>
           </nav>
         )}
       </header>
