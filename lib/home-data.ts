@@ -113,7 +113,7 @@ export async function getHomeData() {
         .select('id, slug, titulo, descripcion, imagen, destacada, created_at, categorias(nombre)')
         .eq('publicado', true)
         .order('created_at', { ascending: false })
-        .limit(30),
+        .limit(150),
       supabase
         .from('versiculo_dia')
         .select('texto, referencia, imagen, momento, fecha')
@@ -156,9 +156,10 @@ export async function getHomeData() {
   const heroSide = pool.filter((n) => !usados.has(n.id)).slice(0, 2)
   heroSide.forEach((n) => usados.add(n.id))
 
-  const nacionales = tomarPorCategoria(pool, usados, 'nacionales', 3, true)
-  const internacionales = tomarPorCategoria(pool, usados, 'internacionales', 3, true)
-  const israel = tomarPorCategoria(pool, usados, 'israel', 3, true)
+  const nacionales = tomarPorCategoria(pool, usados, 'nacionales', 20, true)
+  const internacionales = tomarPorCategoria(pool, usados, 'internacionales', 20, true)
+  const israel = tomarPorCategoria(pool, usados, 'israel', 20, true)
+  const fe = tomarPorCategoria(pool, usados, 'fe', 20, true)
   const analisisLista = tomarPorCategoria(pool, usados, 'analisis', 1)
   const analisis = analisisLista[0]
 
@@ -224,6 +225,7 @@ export async function getHomeData() {
     nacionales,
     internacionales,
     israel,
+    fe,
     analisis,
     ultimasNoticias: ultimasNoticias.length ? ultimasNoticias : ['Aun no hay noticias publicadas.'],
     versiculo,
