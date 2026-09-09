@@ -76,3 +76,9 @@ html.theme-dark .border-slate-200,
 html.theme-dark .border-slate-300 {
   border-color: #2a3142 !important;
 }
+
+/* ===== Modo oscuro: todo el texto en blanco ===== */
+html.theme-dark,
+html.theme-dark * {
+  color: #ffffff !important;
+}
