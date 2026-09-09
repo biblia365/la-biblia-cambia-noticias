@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import ComentariosSeccion from "@/components/comentarios-seccion";
+import { obtenerVistaPreviaFuente } from "@/lib/og-preview";
 
 function formatFechaHora(iso: string) {
   const d = new Date(iso);
@@ -66,6 +67,10 @@ export default async function NoticiaPage({
     .order("created_at", { ascending: false });
 
   const categoria = ((noticia as any).categorias?.nombre || "NOTICIAS").toUpperCase();
+
+  const fuentePreview = noticia.fuente_url
+    ? await obtenerVistaPreviaFuente(noticia.fuente_url)
+    : null;
   const parrafos = (noticia.contenido || noticia.descripcion || "")
     .split("\n")
     .map((p: string) => p.trim())
@@ -110,19 +115,6 @@ export default async function NoticiaPage({
           </a>
         </div>
 
-        {noticia.fuente_url && (
-          <div className="mt-4">
-            <a
-              href={noticia.fuente_url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition underline"
-            >
-              Link de fuente
-            </a>
-          </div>
-        )}
-
         {noticia.imagen && (
           <div className="mt-6 rounded-xl overflow-hidden">
             <img
@@ -140,6 +132,46 @@ export default async function NoticiaPage({
             <p className="text-slate-400 italic">Esta noticia aun no tiene contenido.</p>
           )}
         </div>
+
+        {noticia.fuente_url && (
+          <div className="mt-6">
+            <span className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
+              Fuente
+            </span>
+            <a
+              href={noticia.fuente_url}
+              target="_blank"
+              rel="noreferrer"
+              className="flex flex-col sm:flex-row bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition max-w-xl"
+            >
+              {fuentePreview?.image && (
+                <img
+                  src={fuentePreview.image}
+                  alt={fuentePreview.title || "Fuente"}
+                  className="w-full sm:w-48 h-40 sm:h-auto object-cover flex-shrink-0"
+                />
+              )}
+              <div className="p-4">
+                {fuentePreview?.siteName && (
+                  <span className="text-[10px] font-bold text-[#C9972B] uppercase tracking-wide">
+                    {fuentePreview.siteName}
+                  </span>
+                )}
+                <p className="font-bold text-[#063B73] text-sm mt-1 leading-snug">
+                  {fuentePreview?.title || noticia.fuente_url}
+                </p>
+                {fuentePreview?.description && (
+                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                    {fuentePreview.description}
+                  </p>
+                )}
+                <span className="inline-block mt-2 text-xs font-bold text-[#063B73] underline">
+                  Ver publicacion original
+                </span>
+              </div>
+            </a>
+          </div>
+        )}
 
         {relacionadasRaw && relacionadasRaw.length > 0 && (
           <section className="mt-12 pt-8 border-t border-slate-200">
@@ -178,7 +210,7 @@ export default async function NoticiaPage({
             href="/"
             className="text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition"
           >
-            ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Volver a todas las noticias
+            ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Volver a todas las noticias
           </Link>
         </div>
       </article>
