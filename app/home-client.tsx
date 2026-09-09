@@ -100,7 +100,7 @@ export default function HomeClient({
       )}
 
       <section className="max-w-7xl mx-auto px-4 pt-6">
-        <div className="relative rounded-xl overflow-hidden min-h-[220px] md:min-h-[260px] bg-[#0a1628] flex items-center">
+        <div className="relative rounded-xl overflow-hidden min-h-[220px] md:min-h-[260px] bg-[#0a1628] flex items-center" style={{ backgroundImage: "url('/BIBLIA.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
           {versiculo.imagen && (
             <img
               src={versiculo.imagen}
