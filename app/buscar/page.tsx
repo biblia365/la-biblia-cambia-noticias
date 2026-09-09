@@ -1,7 +1,8 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
 
 function formatFecha(iso: string) {
   return new Date(iso)
@@ -47,31 +48,7 @@ export default async function BuscarPage({
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/logo.png"
-              alt="La Biblia Cambia Noticias"
-              width={56}
-              height={56}
-              className="w-12 h-12 md:w-14 md:h-14 object-contain"
-              priority
-            />
-            <div className="leading-tight">
-              <span className="block text-lg md:text-xl font-extrabold text-[#063B73] tracking-tight">
-                LA BIBLIA CAMBIA
-              </span>
-              <span className="block text-[10px] md:text-xs tracking-[0.2em] text-[#C9972B] font-bold mt-1">
-                ACTUALIDAD - FE - VERDAD
-              </span>
-            </div>
-          </Link>
-          <Link href="/" className="text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition">
-            Volver al inicio
-          </Link>
-        </div>
-      </header>
+      <SiteHeader redes={redes} />
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <h1 className="text-2xl font-extrabold text-[#063B73] mb-2">

@@ -1,9 +1,10 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import SiteFooter from "@/components/site-footer";
 import BibliaSelector from "@/components/biblia-selector";
 import { LIBROS } from "@/lib/libros";
 import { createClient } from "@/lib/supabase/server";
+import SiteHeader from "@/components/site-header";
 
 function limpiarTexto(texto: string) {
   return texto.replace(/<[^>]+>/g, "");
@@ -20,6 +21,20 @@ export default async function BibliaPage({
   const libroActual = LIBROS.find((l) => l.num === libroNum) ?? LIBROS[42];
 
   const supabase = await createClient();
+
+  const { data: redesRaw } = await supabase
+    .from("redes_sociales")
+    .select("plataforma, url")
+    .eq("activo", true);
+
+  const redesMap = new Map<string, string>();
+  (redesRaw ?? []).forEach((r: any) => redesMap.set(r.plataforma.toLowerCase(), r.url));
+  const redes = {
+    facebook: redesMap.get("facebook") || "#",
+    youtube: redesMap.get("youtube") || "#",
+    instagram: redesMap.get("instagram") || "#",
+    tiktok: redesMap.get("tiktok") || "#",
+  };
 
   let versiculos: { id: number; number: number; text: string }[] = [];
   let error = "";
@@ -57,17 +72,7 @@ export default async function BibliaPage({
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="La Biblia Cambia Noticias" width={48} height={48} className="w-10 h-10 object-contain" />
-            <span className="font-extrabold text-[#063B73] text-lg">LA BIBLIA CAMBIA</span>
-          </Link>
-          <Link href="/" className="text-sm font-bold text-[#063B73] hover:text-[#C9972B] transition">
-            Volver al inicio
-          </Link>
-        </div>
-      </header>
+      <SiteHeader redes={redes} />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
