@@ -78,11 +78,12 @@ function tomarPorCategoria(
   pool: NoticiaCard[],
   usados: Set<string>,
   match: string,
-  count: number
+  count: number,
+  sinRelleno = false
 ) {
   const disponibles = pool.filter((n) => !usados.has(n.id))
   const propias = disponibles.filter((n) => n.categoria.toLowerCase() === match.toLowerCase())
-  const resto = disponibles.filter((n) => !propias.includes(n))
+  const resto = sinRelleno ? [] : disponibles.filter((n) => !propias.includes(n))
   const elegidas = [...propias, ...resto].slice(0, count)
   elegidas.forEach((n) => usados.add(n.id))
   return elegidas
@@ -155,9 +156,9 @@ export async function getHomeData() {
   const heroSide = pool.filter((n) => !usados.has(n.id)).slice(0, 2)
   heroSide.forEach((n) => usados.add(n.id))
 
-  const nacionales = tomarPorCategoria(pool, usados, 'nacionales', 3)
-  const internacionales = tomarPorCategoria(pool, usados, 'internacionales', 3)
-  const israel = tomarPorCategoria(pool, usados, 'israel', 3)
+  const nacionales = tomarPorCategoria(pool, usados, 'nacionales', 3, true)
+  const internacionales = tomarPorCategoria(pool, usados, 'internacionales', 3, true)
+  const israel = tomarPorCategoria(pool, usados, 'israel', 3, true)
   const analisisLista = tomarPorCategoria(pool, usados, 'analisis', 1)
   const analisis = analisisLista[0]
 
@@ -238,6 +239,7 @@ export async function getHomeData() {
     },
   }
 }
+
 
 
 
