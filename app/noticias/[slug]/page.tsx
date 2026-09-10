@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,6 +18,47 @@ function formatFechaHora(iso: string) {
     .toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit", hour12: true })
     .toUpperCase();
   return `${fecha} - ${hora}`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+
+  const { data: noticia } = await supabase
+    .from("noticias")
+    .select("titulo, descripcion, imagen, created_at")
+    .eq("slug", slug)
+    .eq("publicado", true)
+    .single();
+
+  if (!noticia) {
+    return { title: "Noticia no encontrada" };
+  }
+
+  const descripcion = noticia.descripcion || "Lee la noticia completa en La Biblia Cambia Noticias.";
+  const imagenOg = noticia.imagen || "/LOGO-ISRAEL.png";
+
+  return {
+    title: noticia.titulo,
+    description: descripcion,
+    openGraph: {
+      type: "article",
+      title: noticia.titulo,
+      description: descripcion,
+      images: [imagenOg],
+      publishedTime: noticia.created_at,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: noticia.titulo,
+      description: descripcion,
+      images: [imagenOg],
+    },
+  };
 }
 
 export default async function NoticiaPage({
@@ -86,8 +128,35 @@ export default async function NoticiaPage({
     .map((p: string) => p.trim())
     .filter(Boolean);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: noticia.titulo,
+    description: noticia.descripcion || "",
+    image: noticia.imagen ? [noticia.imagen] : [],
+    datePublished: noticia.created_at,
+    dateModified: noticia.created_at,
+    author: [{ "@type": "Organization", name: "La Biblia Cambia Noticias" }],
+    publisher: {
+      "@type": "Organization",
+      name: "La Biblia Cambia Noticias",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://la-biblia-cambia-noticias.vercel.app/LOGO-ISRAEL.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://la-biblia-cambia-noticias.vercel.app/noticias/${slug}`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <SiteHeader redes={redes} />
 
       <article className="max-w-3xl mx-auto px-4 py-10">
