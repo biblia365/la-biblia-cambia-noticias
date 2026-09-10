@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
@@ -49,21 +49,6 @@ async function pedirVersiculoAGroq(momento: "dia" | "noche") {
   return { texto: parsed.texto as string, referencia: parsed.referencia as string };
 }
 
-async function buscarImagenPexels(momento: "dia" | "noche") {
-  const query = momento === "dia" ? "sunrise nature peaceful" : "night sky stars peaceful";
-  const res = await fetch(
-    `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=landscape&per_page=5`,
-    { headers: { Authorization: process.env.PEXELS_API_KEY! } }
-  );
-
-  if (!res.ok) {
-    throw new Error(`Pexels error: ${res.status} ${await res.text()}`);
-  }
-
-  const data = await res.json();
-  const foto = data.photos?.[Math.floor(Math.random() * (data.photos?.length || 1))];
-  return foto?.src?.large2x || foto?.src?.large || null;
-}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -75,10 +60,7 @@ export async function GET(req: NextRequest) {
   const momento: "dia" | "noche" = momentoParam === "noche" ? "noche" : "dia";
 
   try {
-    const [{ texto, referencia }, imagen] = await Promise.all([
-      pedirVersiculoAGroq(momento),
-      buscarImagenPexels(momento),
-    ]);
+    const { texto, referencia } = await pedirVersiculoAGroq(momento);
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -86,6 +68,16 @@ export async function GET(req: NextRequest) {
     );
 
     const fecha = fechaColombiaHoy();
+
+    const { data: registroExistente } = await supabase
+      .from("versiculo_dia")
+      .select("imagen")
+      .eq("momento", momento)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    const imagen = registroExistente?.imagen || null;
 
     const { error } = await supabase.from("versiculo_dia").upsert(
       {
