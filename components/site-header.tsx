@@ -102,7 +102,7 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
           </button>
 
           <Link href="/" className="flex items-center gap-3 flex-shrink-0 justify-self-center md:justify-self-auto">
-            <Image src="/LOGO-ISRAEL.png" alt="La Biblia Cambia Noticias" width={220} height={70} className="h-24 md:h-16 w-auto object-contain" priority />
+            <Image src="/LOGO-ISRAEL.png" alt="La Biblia Cambia Noticias" width={220} height={70} className="h-32 md:h-16 w-auto object-contain" priority />
           </Link>
 
           <nav className="hidden md:flex items-center gap-0.5 font-extrabold text-[13px] flex-shrink-0">
