@@ -46,10 +46,10 @@ export default function SiteFooter({ redes }: { redes?: Redes }) {
           <div>
             <h3 className="text-white font-bold text-sm mb-4">INFORMACION</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-[#C9972B] transition">Quienes somos</a></li>
-              <li><a href="#" className="hover:text-[#C9972B] transition">Contacto</a></li>
-              <li><a href="#" className="hover:text-[#C9972B] transition">Politica de privacidad</a></li>
-              <li><a href="#" className="hover:text-[#C9972B] transition">Terminos de uso</a></li>
+              <li><a href="/quienes-somos" className="hover:text-[#C9972B] transition">Quienes somos</a></li>
+              <li><a href="/contacto" className="hover:text-[#C9972B] transition">Contacto</a></li>
+              <li><a href="/politica-de-privacidad" className="hover:text-[#C9972B] transition">Politica de privacidad</a></li>
+              <li><a href="/terminos-de-uso" className="hover:text-[#C9972B] transition">Terminos de uso</a></li>
             </ul>
           </div>
 
