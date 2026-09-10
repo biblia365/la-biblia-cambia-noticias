@@ -84,16 +84,19 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <span className="font-bold text-white flex-shrink-0 hidden sm:inline">Tendencias:</span>
               <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                {tendencias.map((t) => (
-                  <Link key={t.slug} href={`/noticias/${t.slug}`} className="hover:text-[#C9972B] transition flex-shrink-0 max-w-[220px] truncate">
-                    {t.titulo}
-                  </Link>
+                {tendencias.map((t, i) => (
+                  <span key={t.slug} className="flex items-center gap-3 flex-shrink-0">
+                    {i > 0 && <span className="text-white/30">|</span>}
+                    <Link href={`/noticias/${t.slug}`} className="hover:text-[#C9972B] transition">
+                      {t.titulo}
+                    </Link>
+                  </span>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
+          <div className="flex items-center gap-1.5 flex-shrink-0 pl-3">
             <a href={redes.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="w-6 h-6 rounded-full bg-[#1877F2] hover:opacity-80 transition flex items-center justify-center">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z"/></svg>
             </a>
