@@ -82,3 +82,12 @@ html.theme-dark,
 html.theme-dark * {
   color: #ffffff !important;
 }
+
+/* Ocultar scrollbar visual mantenendo el scroll funcional */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

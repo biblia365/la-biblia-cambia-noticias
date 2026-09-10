@@ -85,7 +85,7 @@ export default function SiteHeader({ redes }: { redes: Redes }) {
               <span className="font-bold text-white flex-shrink-0 hidden sm:inline">Tendencias:</span>
               <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-hide">
                 {tendencias.map((t) => (
-                  <Link key={t.slug} href={`/noticias/${t.slug}`} className="hover:text-[#C9972B] transition flex-shrink-0">
+                  <Link key={t.slug} href={`/noticias/${t.slug}`} className="hover:text-[#C9972B] transition flex-shrink-0 max-w-[220px] truncate">
                     {t.titulo}
                   </Link>
                 ))}
