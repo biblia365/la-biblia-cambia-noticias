@@ -83,11 +83,15 @@ export default async function NoticiaPage({
     tiktok: redesMap.get("tiktok") || "#",
   };
 
+  const { data: sitioBiblia } = await supabase.from("sitios").select("id").eq("slug", "biblia").single();
+  const bibliaId = sitioBiblia?.id;
+
   const { data: noticia } = await supabase
     .from("noticias")
     .select("id, titulo, descripcion, contenido, imagen, created_at, categoria_id, fuente_url, categorias(nombre)")
     .eq("slug", slug)
     .eq("publicado", true)
+    .eq("sitio_id", bibliaId)
     .single();
 
   if (!noticia) {
@@ -99,6 +103,7 @@ export default async function NoticiaPage({
     .select("id, titulo, slug, imagen, created_at, categorias(nombre)")
     .eq("categoria_id", (noticia as any).categoria_id)
     .eq("publicado", true)
+    .eq("sitio_id", bibliaId)
     .neq("id", noticia.id)
     .order("created_at", { ascending: false })
     .limit(4);

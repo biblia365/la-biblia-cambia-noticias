@@ -5,10 +5,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://la-biblia-cambia-noticias.vercel.app'
   const supabase = await createClient()
 
+  const { data: sitioBiblia } = await supabase.from('sitios').select('id').eq('slug', 'biblia').single()
+
   const { data: noticias } = await supabase
     .from('noticias')
     .select('slug, created_at')
     .eq('publicado', true)
+    .eq('sitio_id', sitioBiblia?.id)
     .order('created_at', { ascending: false })
     .limit(1000)
 
