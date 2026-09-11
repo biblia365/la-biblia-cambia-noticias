@@ -45,6 +45,14 @@ export default function SitioForm({ sitio }: { sitio?: Sitio }) {
         <input name="dominio" defaultValue={sitio?.dominio ?? ''} placeholder="ej: deportes-cambia.vercel.app" style={{ width: '100%', padding: 8 }} />
       </div>
 
+      <div style={{ marginBottom: 12 }}>
+        <label>URL del logo (ej: /LOGO-GOLES.png)</label>
+        <input name="logo_url" defaultValue={sitio?.logo_url ?? ''} placeholder="/LOGO-GOLES.png" style={{ width: '100%', padding: 8 }} />
+        {sitio?.logo_url && (
+          <img src={sitio.logo_url} alt="Logo actual" style={{ height: 50, marginTop: 8, display: 'block' }} />
+        )}
+      </div>
+
       <div style={{ marginBottom: 12, display: 'flex', gap: 16 }}>
         <div style={{ flex: 1 }}>
           <label>Color primario</label>
