@@ -5,7 +5,7 @@ export default function SitioFooter({ sitio, redes }: { sitio: Sitio; redes: Red
   return (
     <footer style={{ background: "#04223f" }} className="text-slate-300 mt-12">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-4 gap-10">
           <div>
             {sitio.logo_url ? (
               <img src={sitio.logo_url} alt={sitio.nombre} className="h-16 w-auto object-contain" />
@@ -22,6 +22,16 @@ export default function SitioFooter({ sitio, redes }: { sitio: Sitio; redes: Red
             <ul className="space-y-2 text-sm">
               <li><a href={`/sitios/${sitio.slug}#inicio`} className="hover:text-white transition">Inicio</a></li>
               <li><a href={`/sitios/${sitio.slug}#ultimas`} className="hover:text-white transition">Ultimas noticias</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-bold text-sm mb-4">INFORMACION</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="/quienes-somos" className="hover:text-white transition">Quienes somos</a></li>
+              <li><a href="/contacto" className="hover:text-white transition">Contacto</a></li>
+              <li><a href="/politica-de-privacidad" className="hover:text-white transition">Politica de privacidad</a></li>
+              <li><a href="/terminos-de-uso" className="hover:text-white transition">Terminos de uso</a></li>
             </ul>
           </div>
 
