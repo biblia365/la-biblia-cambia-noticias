@@ -6,7 +6,7 @@ export default async function AdminNoticiasPage() {
   const supabase = await createClient()
   const { data: noticias } = await supabase
     .from('noticias')
-    .select('id, titulo, publicado, destacada, created_at, categorias(nombre)')
+    .select('id, titulo, publicado, destacada, created_at, categorias(nombre), sitios(nombre)')
     .order('created_at', { ascending: false })
 
   return (
@@ -36,8 +36,8 @@ export default async function AdminNoticiasPage() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', background: '#FAFAF8', borderBottom: '1px solid #E4E2DC' }}>
-              <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>Título</th>
-              <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>Categoría</th>
+              <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>TÃ­tulo</th>
+              <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>CategorÃ­a</th>
               <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>Publicado</th>
               <th style={{ padding: '10px 16px', fontSize: 12.5, color: '#6B6F76', fontWeight: 500 }}>Acciones</th>
             </tr>
@@ -46,6 +46,9 @@ export default async function AdminNoticiasPage() {
             {noticias?.map((n: any) => (
               <tr key={n.id} style={{ borderBottom: '1px solid #EFEDE7' }}>
                 <td style={{ padding: '12px 16px', fontSize: 14 }}>{n.titulo}</td>
+                <td style={{ padding: '12px 16px', fontSize: 13, color: '#6B6F76' }}>
+                  {n.sitios?.nombre || '-'}
+                </td>
                 <td style={{ padding: '12px 16px', fontSize: 14, color: '#6B6F76' }}>
                   {n.categorias?.nombre || '-'}
                 </td>
@@ -59,7 +62,7 @@ export default async function AdminNoticiasPage() {
                       color: n.publicado ? '#2F6B4F' : '#8B8776',
                     }}
                   >
-                    {n.publicado ? 'Sí' : 'No'}
+                    {n.publicado ? 'SÃ­' : 'No'}
                   </span>
                 </td>
                 <td style={{ padding: '12px 16px', display: 'flex', gap: 14 }}>

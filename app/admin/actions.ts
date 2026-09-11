@@ -32,6 +32,7 @@ export async function crearNoticia(formData: FormData) {
   const descripcion = formData.get('descripcion') as string
   const contenido = formData.get('contenido') as string
   const categoria_id = formData.get('categoria_id') as string
+  const sitio_id = formData.get('sitio_id') as string
   const fuente_url = formData.get('fuente_url') as string
   const destacada = formData.get('destacada') === 'on'
   const publicado = formData.get('publicado') === 'on'
@@ -62,6 +63,7 @@ export async function crearNoticia(formData: FormData) {
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
+    sitio_id: sitio_id || null,
     fuente_url: fuente_url || null,
     destacada,
     publicado,
@@ -82,6 +84,7 @@ export async function actualizarNoticia(id: string, formData: FormData) {
   const descripcion = formData.get('descripcion') as string
   const contenido = formData.get('contenido') as string
   const categoria_id = formData.get('categoria_id') as string
+  const sitio_id = formData.get('sitio_id') as string
   const fuente_url = formData.get('fuente_url') as string
   const destacada = formData.get('destacada') === 'on'
   const publicado = formData.get('publicado') === 'on'
@@ -97,6 +100,7 @@ export async function actualizarNoticia(id: string, formData: FormData) {
     descripcion,
     contenido,
     categoria_id: categoria_id || null,
+    sitio_id: sitio_id || null,
     fuente_url: fuente_url || null,
     destacada,
     publicado,

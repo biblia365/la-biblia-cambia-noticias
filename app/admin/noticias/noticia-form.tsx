@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation'
 import { crearNoticia, actualizarNoticia } from '../actions'
 
 type Categoria = { id: string; nombre: string }
+type Sitio = { id: string; nombre: string }
 type Noticia = {
   id: string
   titulo: string
   descripcion: string | null
   contenido: string | null
   categoria_id: string | null
+  sitio_id: string | null
   destacada: boolean
   publicado: boolean
   imagen: string | null
@@ -19,9 +21,11 @@ type Noticia = {
 
 export default function NoticiaForm({
   categorias,
+  sitios,
   noticia,
 }: {
   categorias: Categoria[]
+  sitios: Sitio[]
   noticia?: Noticia
 }) {
   const [error, setError] = useState('')
@@ -83,6 +87,16 @@ export default function NoticiaForm({
       <div style={{ marginBottom: 12 }}>
         <label>Contenido</label>
         <textarea name="contenido" defaultValue={noticia?.contenido ?? ''} rows={8} style={{ width: '100%', padding: 8 }} />
+      </div>
+
+      <div style={{ marginBottom: 12 }}>
+        <label>Sitio</label>
+        <select name="sitio_id" defaultValue={noticia?.sitio_id ?? ''} required style={{ width: '100%', padding: 8 }}>
+          <option value="">- Selecciona un sitio -</option>
+          {sitios.map((s) => (
+            <option key={s.id} value={s.id}>{s.nombre}</option>
+          ))}
+        </select>
       </div>
 
       <div style={{ marginBottom: 12 }}>
