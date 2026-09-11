@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import LogoutButton from './logout-button'
 
 const NAV = [
+  { href: '/admin/sitios', label: 'Sitios' },
   { href: '/admin/noticias', label: 'Noticias' },
   { href: '/admin/categorias', label: 'Categorias' },
   { href: '/admin/versiculo', label: 'Versiculo del dia' },

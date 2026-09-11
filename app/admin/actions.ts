@@ -436,3 +436,64 @@ export async function borrarSuscriptor(id: string) {
   revalidatePath('/admin/suscriptores')
   return { success: true }
 }
+export async function guardarRedSocial(formData: FormData) {
+  const supabase = await createClient()
+  const plataforma = formData.get('plataforma') as string
+  const url = formData.get('url') as string
+  const activo = formData.get('activo') === 'on'
+
+  const { error } = await supabase
+    .from('redes_sociales')
+    .upsert({ plataforma, url, activo }, { onConflict: 'plataforma' })
+
+  if (error) {
+    return { error: 'Error al guardar: ' + error.message }
+  }
+  revalidatePath('/admin/redes')
+  revalidatePath('/')
+  return { success: true }
+}
+export async function crearSitio(formData: FormData) {
+  const supabase = await createClient()
+  const nombre = formData.get('nombre') as string
+  const dominio = formData.get('dominio') as string
+  const color_primario = (formData.get('color_primario') as string) || '#063B73'
+  const color_acento = (formData.get('color_acento') as string) || '#C9972B'
+  const activo = formData.get('activo') === 'on'
+
+  const { error } = await supabase.from('sitios').insert({
+    nombre,
+    slug: slugify(nombre),
+    dominio: dominio || null,
+    color_primario,
+    color_acento,
+    activo,
+  })
+  if (error) {
+    return { error: 'Error al crear el sitio: ' + error.message }
+  }
+  revalidatePath('/admin/sitios')
+  return { success: true }
+}
+
+export async function actualizarSitio(id: string, formData: FormData) {
+  const supabase = await createClient()
+  const nombre = formData.get('nombre') as string
+  const dominio = formData.get('dominio') as string
+  const color_primario = (formData.get('color_primario') as string) || '#063B73'
+  const color_acento = (formData.get('color_acento') as string) || '#C9972B'
+  const activo = formData.get('activo') === 'on'
+
+  const { error } = await supabase.from('sitios').update({
+    nombre,
+    dominio: dominio || null,
+    color_primario,
+    color_acento,
+    activo,
+  }).eq('id', id)
+  if (error) {
+    return { error: 'Error al actualizar el sitio: ' + error.message }
+  }
+  revalidatePath('/admin/sitios')
+  return { success: true }
+}
