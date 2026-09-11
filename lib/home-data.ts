@@ -106,12 +106,16 @@ function fechaColombiaHoy(): string {
 export async function getHomeData() {
   const supabase = await createClient()
 
+  const { data: sitioBiblia } = await supabase.from('sitios').select('id').eq('slug', 'biblia').single()
+  const bibliaId = sitioBiblia?.id
+
   const [{ data: noticiasRaw }, { data: versiculoRaw }, { data: videosRaw }, { data: redesRaw }, { data: cancionesRaw }, { data: avisoRaw }, { data: anuncioRaw }] =
     await Promise.all([
       supabase
         .from('noticias')
         .select('id, slug, titulo, descripcion, imagen, destacada, created_at, categorias(nombre)')
         .eq('publicado', true)
+        .eq('sitio_id', bibliaId)
         .order('created_at', { ascending: false })
         .limit(150),
       supabase
