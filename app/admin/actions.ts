@@ -501,3 +501,23 @@ export async function actualizarSitio(id: string, formData: FormData) {
   revalidatePath('/admin/sitios')
   return { success: true }
 }
+export async function suscribirseNewsletterSitio(formData: FormData) {
+  const supabase = await createClient()
+  const email = (formData.get('email') as string || '').trim().toLowerCase()
+  const sitio_id = formData.get('sitio_id') as string
+
+  if (!email || !email.includes('@')) {
+    return { error: 'Ingresa un correo valido' }
+  }
+
+  const { error } = await supabase.from('suscriptores').insert({ email, sitio_id: sitio_id || null })
+
+  if (error) {
+    if (error.code === '23505') {
+      return { error: 'Este correo ya esta suscrito' }
+    }
+    return { error: 'No se pudo suscribir. Intenta de nuevo.' }
+  }
+
+  return { success: true }
+}
