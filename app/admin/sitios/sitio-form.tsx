@@ -8,6 +8,7 @@ type Sitio = {
   id: string
   nombre: string
   dominio: string | null
+  logo_url: string | null
   color_primario: string
   color_acento: string
   activo: boolean

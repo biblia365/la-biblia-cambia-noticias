@@ -461,6 +461,7 @@ export async function crearSitio(formData: FormData) {
   const supabase = await createClient()
   const nombre = formData.get('nombre') as string
   const dominio = formData.get('dominio') as string
+  const logo_url = formData.get('logo_url') as string
   const color_primario = (formData.get('color_primario') as string) || '#063B73'
   const color_acento = (formData.get('color_acento') as string) || '#C9972B'
   const activo = formData.get('activo') === 'on'
@@ -469,6 +470,7 @@ export async function crearSitio(formData: FormData) {
     nombre,
     slug: slugify(nombre),
     dominio: dominio || null,
+    logo_url: logo_url || null,
     color_primario,
     color_acento,
     activo,
@@ -484,6 +486,7 @@ export async function actualizarSitio(id: string, formData: FormData) {
   const supabase = await createClient()
   const nombre = formData.get('nombre') as string
   const dominio = formData.get('dominio') as string
+  const logo_url = formData.get('logo_url') as string
   const color_primario = (formData.get('color_primario') as string) || '#063B73'
   const color_acento = (formData.get('color_acento') as string) || '#C9972B'
   const activo = formData.get('activo') === 'on'
@@ -491,6 +494,7 @@ export async function actualizarSitio(id: string, formData: FormData) {
   const { error } = await supabase.from('sitios').update({
     nombre,
     dominio: dominio || null,
+    logo_url: logo_url || null,
     color_primario,
     color_acento,
     activo,
