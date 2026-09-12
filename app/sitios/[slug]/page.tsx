@@ -5,6 +5,7 @@ import SitioHeader from "@/components/sitio-header";
 import SitioFooter from "@/components/sitio-footer";
 import AnuncioBanner from "@/components/anuncio-banner";
 import FormularioSuscripcionSitio from "@/components/formulario-suscripcion-sitio";
+import PartidosCarousel from "@/components/partidos-carousel";
 
 export default async function SitioHomePage({
   params,
@@ -110,6 +111,8 @@ export default async function SitioHomePage({
       )}
 
       <SitioHeader sitio={sitio} redes={redes} />
+
+      {slug.includes("goles") && <PartidosCarousel colorPrimario={cp} />}
 
       <div className="max-w-7xl mx-auto px-4">
         {!lista.length && (
