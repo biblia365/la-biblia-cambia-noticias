@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SitioHeader from "@/components/sitio-header";
@@ -6,6 +6,7 @@ import SitioFooter from "@/components/sitio-footer";
 import AnuncioBanner from "@/components/anuncio-banner";
 import FormularioSuscripcionSitio from "@/components/formulario-suscripcion-sitio";
 import PartidosCarousel from "@/components/partidos-carousel";
+import NoticiasFiltro from "@/components/noticias-filtro";
 
 export async function generateMetadata({
   params,
@@ -192,25 +193,7 @@ export default async function SitioHomePage({
             <div style={{ borderColor: cp }} className="flex items-center justify-between border-b-2 pb-3 mb-6">
               <h2 style={{ color: cp }} className="text-2xl font-extrabold">Ultimas noticias</h2>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {resto.map((n: any) => (
-                <Link
-                  key={n.id}
-                  href={`/sitios/${slug}/noticias/${n.slug}`}
-                  className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition flex flex-col h-full"
-                >
-                  <div className="h-48 flex-shrink-0">
-                    {n.imagen && <img src={n.imagen} alt={n.titulo} className="w-full h-full object-cover" />}
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <span style={{ color: ca }} className="font-extrabold text-xs uppercase">{n.categorias?.nombre || "Noticias"}</span>
-                    <h3 style={{ color: cp }} className="mt-2 text-lg font-bold leading-snug">{n.titulo}</h3>
-                    <p className="mt-2 text-sm text-slate-600 line-clamp-3">{n.descripcion}</p>
-                    <span className="block mt-auto pt-3 text-xs text-slate-400">{formatFecha(n.created_at)}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <NoticiasFiltro noticias={resto as any} slug={slug} colorPrimario={cp} colorAcento={ca} />
           </section>
         )}
 
