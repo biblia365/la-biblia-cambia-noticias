@@ -7,6 +7,25 @@ import AnuncioBanner from "@/components/anuncio-banner";
 import FormularioSuscripcionSitio from "@/components/formulario-suscripcion-sitio";
 import PartidosCarousel from "@/components/partidos-carousel";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const supabase = await createClient()
+  const { data: sitio } = await supabase
+    .from("sitios")
+    .select("nombre, logo_url")
+    .eq("slug", slug)
+    .single()
+
+  return {
+    title: sitio?.nombre || "Sitio no encontrado",
+    icons: sitio?.logo_url ? { icon: sitio.logo_url } : undefined,
+  }
+}
+
 export default async function SitioHomePage({
   params,
 }: {
