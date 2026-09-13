@@ -26,6 +26,7 @@ export async function GET() {
     const partidos = (data.matches || []).map((m: any) => ({
       id: m.id,
       liga: m.competition?.name || '',
+      jornada: m.matchday || null,
       local: m.homeTeam?.shortName || m.homeTeam?.name || 'Local',
       visitante: m.awayTeam?.shortName || m.awayTeam?.name || 'Visitante',
       escudoLocal: m.homeTeam?.crest || null,
