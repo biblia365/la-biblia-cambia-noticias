@@ -21,7 +21,7 @@ export async function generateMetadata({
     .single()
 
   return {
-    title: sitio?.nombre || "Sitio no encontrado",
+    title: { absolute: sitio?.nombre || "Sitio no encontrado" },
     icons: sitio?.logo_url ? { icon: sitio.logo_url } : undefined,
   }
 }
