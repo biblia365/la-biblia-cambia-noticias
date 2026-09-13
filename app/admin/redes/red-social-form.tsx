@@ -5,7 +5,7 @@ import { guardarRedSocial } from '../actions'
 
 type RedSocial = { plataforma: string; url: string; activo: boolean }
 
-export default function RedSocialForm({ red }: { red: RedSocial }) {
+export default function RedSocialForm({ red, sitioId }: { red: RedSocial; sitioId: string }) {
   const [loading, setLoading] = useState(false)
   const [guardado, setGuardado] = useState(false)
   const [error, setError] = useState('')
@@ -27,6 +27,7 @@ export default function RedSocialForm({ red }: { red: RedSocial }) {
   return (
     <form action={handleSubmit} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 0', borderBottom: '1px solid #EFEDE7' }}>
       <input type="hidden" name="plataforma" value={red.plataforma} />
+      <input type="hidden" name="sitio_id" value={sitioId} />
       <span style={{ width: 100, fontWeight: 600, fontSize: 14, color: '#1A1D29', flexShrink: 0 }}>{red.plataforma}</span>
       <input
         name="url"

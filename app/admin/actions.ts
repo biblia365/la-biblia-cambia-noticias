@@ -444,17 +444,19 @@ export async function guardarRedSocial(formData: FormData) {
   const supabase = await createClient()
   const plataforma = formData.get('plataforma') as string
   const url = formData.get('url') as string
+  const sitio_id = formData.get('sitio_id') as string
   const activo = formData.get('activo') === 'on'
 
   const { error } = await supabase
     .from('redes_sociales')
-    .upsert({ plataforma, url, activo }, { onConflict: 'plataforma' })
+    .upsert({ plataforma, url, activo, sitio_id: sitio_id || null }, { onConflict: 'plataforma,sitio_id' })
 
   if (error) {
     return { error: 'Error al guardar: ' + error.message }
   }
   revalidatePath('/admin/redes')
   revalidatePath('/')
+  revalidatePath('/sitios/[slug]', 'page')
   return { success: true }
 }
 export async function crearSitio(formData: FormData) {
